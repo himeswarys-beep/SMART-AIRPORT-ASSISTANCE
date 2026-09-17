@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 650" width="100%" height="100%">
+  <defs>
+    <!-- Day Aviation Sky Gradient -->
+    <linearGradient id="daySky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#bde0fe" />
+      <stop offset="35%" stop-color="#d0e8fc" />
+      <stop offset="70%" stop-color="#eaf4fd" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+
+    <!-- Teal-Cyan Overlay Curve Ribbon -->
+    <linearGradient id="cyanRibbon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00b4d8" stop-opacity="0.85" />
+      <stop offset="60%" stop-color="#0077b6" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#023e8a" stop-opacity="0.95" />
+    </linearGradient>
+
+    <linearGradient id="glassFacade" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#90e0ef" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#0077b6" stop-opacity="0.25" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Canvas -->
+  <rect width="1600" height="650" fill="url(#daySky)" />
+
+  <!-- Soft Clouds -->
+  <g opacity="0.45" fill="#ffffff">
+    <ellipse cx="400" cy="180" rx="220" ry="60" />
+    <ellipse cx="500" cy="160" rx="140" ry="70" />
+    <ellipse cx="900" cy="140" rx="280" ry="80" />
+    <ellipse cx="1020" cy="110" rx="160" ry="60" />
+    <ellipse cx="1350" cy="190" rx="200" ry="65" />
+  </g>
+
+  <!-- Modern Airport Terminal Complex -->
+  <g transform="translate(450, 240)">
+    <!-- Terminal Roof Overhang -->
+    <path d="M 100 240 L 160 140 L 980 140 L 1020 240 Z" fill="#0077b6" opacity="0.85" />
+    <!-- Glass Concourse Windows -->
+    <rect x="140" y="150" width="860" height="180" fill="url(#glassFacade)" stroke="#0077b6" stroke-width="2" />
+    
+    <!-- Window Grid -->
+    <line x1="240" y1="150" x2="240" y2="330" stroke="#0077b6" stroke-width="1.5" opacity="0.4" />
+    <line x1="360" y1="150" x2="360" y2="330" stroke="#0077b6" stroke-width="1.5" opacity="0.4" />
+    <line x1="480" y1="150" x2="480" y2="330" stroke="#0077b6" stroke-width="1.5" opacity="0.4" />
+    <line x1="600" y1="150" x2="600" y2="330" stroke="#0077b6" stroke-width="1.5" opacity="0.4" />
+    <line x1="720" y1="150" x2="720" y2="330" stroke="#0077b6" stroke-width="1.5" opacity="0.4" />
+    <line x1="840" y1="150" x2="840" y2="330" stroke="#0077b6" stroke-width="1.5" opacity="0.4" />
+    <line x1="940" y1="150" x2="940" y2="330" stroke="#0077b6" stroke-width="1.5" opacity="0.4" />
+
+    <!-- Apron / Ground Platform -->
+    <rect x="0" y="320" width="1150" height="120" fill="#e2edf8" />
+  </g>
+
+  <!-- Control Tower in Background Right -->
+  <g transform="translate(1320, 110)">
+    <!-- Shaft -->
+    <polygon points="40,240 50,70 70,70 80,240" fill="#023e8a" opacity="0.9" />
+    <!-- Cab -->
+    <polygon points="30,70 90,70 98,35 22,35" fill="#0077b6" />
+    <!-- Roof Dome -->
+    <rect x="56" y="15" width="8" height="20" fill="#023e8a" />
+    <circle cx="60" cy="12" r="8" fill="#00b4d8" />
+  </g>
+
+  <!-- Jet Aircraft in Flight (Climbing into Blue Sky) -->
+  <g transform="translate(820, 160) rotate(-18) scale(0.85)">
+    <!-- Fuselage -->
+    <path d="M 0,-70 C 8,-70 14,-50 14,-10 L 16,80 L 110,120 L 110,138 L 16,110 L 16,160 L 46,185 L 46,200 L 0,190 L -46,200 L -46,185 L -16,160 L -16,110 L -110,138 L -110,120 L -16,80 L -14,-10 C -14,-50 -8,-70 0,-70 Z" 
+          fill="#023e8a" />
+    <!-- Cockpit -->
+    <ellipse cx="0" cy="-45" rx="5" ry="12" fill="#00b4d8" />
+    <!-- Wing Highlights -->
+    <path d="M 16,80 L 110,120 L 90,128 L 16,95 Z" fill="#0077b6" opacity="0.7" />
+  </g>
+
+  <!-- Right Decorative Teal/Cyan Swoosh Wave Ribbon (Signature Reference Accent) -->
+  <path d="M 1300,0 Q 1480,220 1280,480 Q 1200,580 1600,650 L 1600,0 Z" 
+        fill="url(#cyanRibbon)" opacity="0.92" />
+  
+  <path d="M 1380,0 Q 1550,200 1360,450 Q 1290,560 1600,600 L 1600,0 Z" 
+        fill="#00b4d8" opacity="0.3" />
+</svg>

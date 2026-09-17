@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="heroCardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#0f172a" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#172554" stop-opacity="0.9" />
+    </linearGradient>
+    <linearGradient id="planeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="70%" stop-color="#93c5fd" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="peachTrail" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316" stop-opacity="0" />
+      <stop offset="50%" stop-color="#fb923c" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#fed7aa" stop-opacity="1" />
+    </linearGradient>
+    <filter id="heroGlow">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="450" rx="24" fill="url(#heroCardGrad)" />
+
+  <!-- Grid lines -->
+  <g stroke="#38bdf8" stroke-width="1" opacity="0.08">
+    <line x1="0" y1="90" x2="800" y2="90" />
+    <line x1="0" y1="180" x2="800" y2="180" />
+    <line x1="0" y1="270" x2="800" y2="270" />
+    <line x1="0" y1="360" x2="800" y2="360" />
+    <line x1="160" y1="0" x2="160" y2="450" />
+    <line x1="320" y1="0" x2="320" y2="450" />
+    <line x1="480" y1="0" x2="480" y2="450" />
+    <line x1="640" y1="0" x2="640" y2="450" />
+  </g>
+
+  <!-- Glowing Radar Rings in background -->
+  <circle cx="580" cy="220" r="180" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.2" />
+  <circle cx="580" cy="220" r="120" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity="0.25" />
+  <circle cx="580" cy="220" r="60" fill="none" stroke="#60a5fa" stroke-width="1" opacity="0.3" />
+
+  <!-- Supersonic Jet Flight Path Curve -->
+  <path d="M 80,360 Q 320,380 500,240 T 720,100" fill="none" stroke="url(#peachTrail)" stroke-width="4" stroke-linecap="round" filter="url(#heroGlow)" />
+  
+  <!-- Jet Aircraft Illustration -->
+  <g transform="translate(680, 110) rotate(-35) scale(0.65)">
+    <path d="M 0,-80 L 14,-20 L 70,25 L 70,40 L 14,20 L 14,65 L 35,85 L 35,95 L 0,85 L -35,95 L -35,85 L -14,65 L -14,20 L -70,40 L -70,25 L -14,-20 Z" 
+          fill="url(#planeGrad)" filter="url(#heroGlow)" />
+    <circle cx="0" cy="-30" r="4" fill="#38bdf8" />
+  </g>
+
+  <!-- Airport Waypoints -->
+  <g filter="url(#heroGlow)">
+    <circle cx="150" cy="355" r="7" fill="#f97316" />
+    <circle cx="150" cy="355" r="14" fill="none" stroke="#f97316" stroke-width="1.5" opacity="0.5" />
+    
+    <circle cx="450" cy="270" r="6" fill="#38bdf8" />
+    <circle cx="450" cy="270" r="12" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity="0.5" />
+
+    <circle cx="720" cy="100" r="7" fill="#fed7aa" />
+  </g>
+
+  <!-- Glass UI Overlay Shapes -->
+  <rect x="50" y="50" width="260" height="90" rx="16" fill="#ffffff" fill-opacity="0.05" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.3" />
+  <circle cx="85" cy="95" r="18" fill="#2563eb" fill-opacity="0.5" />
+  <!-- Mini flight icon in pill -->
+  <path d="M 85,86 L 90,92 L 98,95 L 98,97 L 90,96 L 90,101 L 93,103 L 93,105 L 85,103 L 77,105 L 77,103 L 80,101 L 80,96 L 72,97 L 72,95 L 80,92 Z" fill="#ffffff" />
+  <rect x="115" y="80" width="120" height="8" rx="4" fill="#ffffff" fill-opacity="0.8" />
+  <rect x="115" y="98" width="80" height="6" rx="3" fill="#38bdf8" fill-opacity="0.6" />
+</svg>

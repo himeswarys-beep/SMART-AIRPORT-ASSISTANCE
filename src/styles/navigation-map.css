@@ -1,0 +1,295 @@
+/* ==========================================================================
+   SMART AIRPORT ASSISTANT - AIRPORT INDOOR NAVIGATION & BLUEPRINT STYLES
+   Theme: Light Canvas + Clean Blueprint White Cards + Cyan Icon Badges
+   ========================================================================== */
+
+.wayfinder-container {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+@media (max-width: 1080px) {
+  .wayfinder-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Blueprint Map Canvas Container */
+.map-canvas-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  min-height: 580px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Blueprint Grid Background */
+.blueprint-grid {
+  background-image: 
+    linear-gradient(to right, rgba(0, 180, 216, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 180, 216, 0.08) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-color: #f8fbfe;
+}
+
+.map-header-bar {
+  padding: 16px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  z-index: 10;
+}
+
+.level-switcher {
+  display: flex;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-full);
+  padding: 3px;
+}
+
+.level-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+}
+
+.level-btn.active {
+  background: var(--badge-cyan-gradient);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 180, 216, 0.4);
+}
+
+.map-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.map-ctrl-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.map-ctrl-btn:hover {
+  background: #f0f9ff;
+  color: var(--cyan-dark);
+  border-color: var(--cyan-primary);
+}
+
+/* SVG Blueprint Elements */
+.airport-svg-viewport {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  min-height: 480px;
+}
+
+/* Zone areas */
+.svg-zone {
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.svg-zone:hover {
+  fill-opacity: 0.45;
+  stroke-width: 2px;
+}
+
+.svg-zone.selected-target {
+  stroke: #0284c7;
+  stroke-width: 3px;
+  filter: drop-shadow(0 0 10px rgba(0, 180, 216, 0.6));
+}
+
+/* Animated Route Path */
+@keyframes dashWalkingRoute {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+.walking-route-path {
+  stroke: #0284c7;
+  stroke-width: 4px;
+  stroke-linecap: round;
+  stroke-dasharray: 8 6;
+  animation: dashWalkingRoute 1s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(0, 180, 216, 0.8));
+}
+
+.route-glow-underlay {
+  stroke: #00b4d8;
+  stroke-width: 8px;
+  stroke-linecap: round;
+  opacity: 0.4;
+  filter: blur(3px);
+}
+
+/* POI Waypoint Pins */
+.poi-pin {
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.poi-pin:hover {
+  transform: scale(1.15);
+}
+
+/* User Current Location Indicator */
+.current-user-beacon {
+  animation: pulseGlow 1.5s infinite;
+}
+
+/* Wayfinding Sidebar Panel */
+.wayfinder-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.route-summary-card {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.route-meta-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.walk-time-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cyan-dark);
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.walk-dist-chip {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+/* Turn-by-Turn Direction Steps */
+.step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.step-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  background: #f8fbfe;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.step-item:hover {
+  background: #f0f9ff;
+  border-color: rgba(0, 180, 216, 0.4);
+}
+
+.step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--badge-cyan-gradient);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-instruction {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.step-distance {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+}
+
+/* Destination Selector Grid */
+.dest-categories {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.dest-cat-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  background: #f8fbfe;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+}
+
+.dest-cat-btn:hover, .dest-cat-btn.active {
+  background: #f0f9ff;
+  border-color: var(--cyan-primary);
+  color: var(--cyan-dark);
+}
+
+.dest-cat-btn.active svg {
+  color: var(--cyan-dark);
+}

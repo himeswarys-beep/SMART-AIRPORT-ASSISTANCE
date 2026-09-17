@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgSalad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="16" fill="url(#bgSalad)" />
+  
+  <!-- Ceramic Salad Bowl -->
+  <ellipse cx="200" cy="160" rx="115" ry="85" fill="#1e293b" stroke="#38bdf8" stroke-width="3" />
+  
+  <!-- Fresh Greens Bed -->
+  <ellipse cx="200" cy="155" rx="100" ry="70" fill="#15803d" />
+  
+  <!-- Sliced Avocado -->
+  <path d="M 150,130 Q 180,110 185,140 Q 180,165 150,155 Z" fill="#84cc16" stroke="#4d7c0f" stroke-width="1.5" />
+  <path d="M 160,135 Q 185,120 190,145 Q 185,170 160,160 Z" fill="#bef264" stroke="#65a30d" stroke-width="1.5" />
+  
+  <!-- Cherry Tomatoes -->
+  <circle cx="230" cy="130" r="12" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5" />
+  <circle cx="255" cy="155" r="10" fill="#dc2626" />
+  <circle cx="225" cy="175" r="11" fill="#ef4444" />
+  
+  <!-- Quinoa / Toasted Seeds -->
+  <g fill="#fef08a" opacity="0.9">
+    <circle cx="190" cy="165" r="2.5" />
+    <circle cx="205" cy="145" r="2" />
+    <circle cx="180" cy="140" r="2.5" />
+    <circle cx="215" cy="170" r="3" />
+  </g>
+  
+  <!-- Cucumber ribbons -->
+  <rect x="135" y="165" width="30" height="8" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="1" transform="rotate(-20 135 165)" />
+  
+  <!-- Olive Oil Dressing Cup -->
+  <circle cx="330" cy="90" r="22" fill="#fef08a" stroke="#ca8a04" stroke-width="2" />
+  <circle cx="330" cy="90" r="12" fill="#a16207" opacity="0.6" />
+
+  <!-- Diabetic Friendly Heart Badge -->
+  <rect x="20" y="20" width="32" height="32" rx="6" fill="#ffffff" fill-opacity="0.1" stroke="#38bdf8" stroke-width="1.5" />
+  <path d="M 36,28 C 36,25 32,23 30,26 C 27,29 30,34 36,39 C 42,34 45,29 42,26 C 40,23 36,25 36,28 Z" fill="#38bdf8" />
+  <text x="60" y="42" fill="#7dd3fc" font-family="sans-serif" font-size="13" font-weight="bold">DIABETIC FRIENDLY • LOW GI</text>
+</svg>
