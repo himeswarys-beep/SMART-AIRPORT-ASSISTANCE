@@ -19,8 +19,10 @@
 /* Blueprint Map Canvas Container */
 .map-canvas-card {
   position: relative;
-  background: #ffffff;
-  border: 1px solid var(--border-subtle);
+  background: rgba(15, 39, 70, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(100, 190, 220, 0.25);
   border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: var(--shadow-md);
@@ -35,12 +37,12 @@
     linear-gradient(to right, rgba(0, 180, 216, 0.08) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 180, 216, 0.08) 1px, transparent 1px);
   background-size: 30px 30px;
-  background-color: #f8fbfe;
+  background-color: rgba(5, 15, 32, 0.6);
 }
 
 .map-header-bar {
   padding: 16px 20px;
-  background: #ffffff;
+  background: rgba(10, 25, 47, 0.7);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
@@ -52,8 +54,8 @@
 
 .level-switcher {
   display: flex;
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
+  background: rgba(10, 20, 35, 0.6);
+  border: 1px solid rgba(100, 190, 220, 0.3);
   border-radius: var(--radius-full);
   padding: 3px;
 }
@@ -84,9 +86,9 @@
   width: 34px;
   height: 34px;
   border-radius: var(--radius-sm);
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  color: var(--text-secondary);
+  background: rgba(15, 39, 70, 0.88);
+  border: 1px solid rgba(100, 190, 220, 0.3);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +96,7 @@
 }
 
 .map-ctrl-btn:hover {
-  background: #f0f9ff;
+  background: rgba(0, 180, 216, 0.2);
   color: var(--cyan-dark);
   border-color: var(--cyan-primary);
 }
@@ -171,8 +173,10 @@
 }
 
 .route-summary-card {
-  background: #ffffff;
-  border: 1px solid var(--border-subtle);
+  background: rgba(15, 39, 70, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(100, 190, 220, 0.25);
   border-radius: var(--radius-lg);
   padding: 20px;
   box-shadow: var(--shadow-sm);
@@ -218,14 +222,14 @@
   gap: 12px;
   align-items: flex-start;
   padding: 10px 12px;
-  background: #f8fbfe;
+  background: rgba(10, 25, 47, 0.6);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
 }
 
 .step-item:hover {
-  background: #f0f9ff;
+  background: rgba(0, 180, 216, 0.15);
   border-color: rgba(0, 180, 216, 0.4);
 }
 
@@ -275,7 +279,7 @@
   align-items: center;
   gap: 4px;
   padding: 10px 6px;
-  background: #f8fbfe;
+  background: rgba(10, 25, 47, 0.6);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
@@ -285,7 +289,7 @@
 }
 
 .dest-cat-btn:hover, .dest-cat-btn.active {
-  background: #f0f9ff;
+  background: rgba(0, 180, 216, 0.2);
   border-color: var(--cyan-primary);
   color: var(--cyan-dark);
 }

@@ -4,7 +4,7 @@ export const AIRLINES = [
     name: 'IndiGo',
     code: '6E',
     logo: '6E',
-    color: '#003366',
+    color: '#02101fff',
     accentColor: '#38bdf8',
     baggageCheckin: '15 kg',
     baggageCabin: '7 kg',

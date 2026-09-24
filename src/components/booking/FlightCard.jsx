@@ -11,12 +11,12 @@ export const FlightCard = ({
   const [showDetails, setShowDetails] = useState(false);
 
   return (
-    <div
+    <div                                                                                   
       className="glass-panel"
       style={{
         padding: '20px 24px',
         marginBottom: '16px',
-        border: isSelected ? '2px solid var(--accent-peach-bright)' : '1px solid rgba(56, 189, 248, 0.2)',
+        border: isSelected ? '2px solid var(--accent-peach-bright)' : '1px solid rgba(69, 149, 184, 0.2)',
         background: isSelected ? 'rgba(251, 146, 60, 0.08)' : 'rgba(11, 23, 50, 0.65)',
         transition: 'all 0.25s ease'
       }}
@@ -142,7 +142,7 @@ export const FlightCard = ({
         style={{
           marginTop: '16px',
           paddingTop: '12px',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          borderTop: '1px solid rgba(58, 34, 34, 0.08)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -185,7 +185,7 @@ export const FlightCard = ({
             marginTop: '14px',
             padding: '16px',
             borderRadius: 'var(--radius-md)',
-            background: 'rgba(5, 11, 24, 0.8)',
+            background: 'rgba(128, 155, 212, 0.8)',
             border: '1px solid rgba(56, 189, 248, 0.15)',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',

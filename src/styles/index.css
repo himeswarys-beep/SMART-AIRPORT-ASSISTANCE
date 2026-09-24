@@ -4,11 +4,11 @@
    ========================================================================== */
 
 :root {
-  /* Core Reference Color Palette */
-  --bg-primary: #edf4fb;
-  --bg-secondary: #f4f8fd;
-  --bg-tertiary: #e2eef9;
-  --bg-canvas: #edf4fb;
+  /* Core Reference Color Palette - White Canvas */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-canvas: #ffffff;
   
   /* Sidebar Nautical Oceanic Gradient */
   --sidebar-gradient: linear-gradient(180deg, #021a36 0%, #003666 45%, #0087a3 85%, #00b4d8 100%);
@@ -17,23 +17,23 @@
   --sidebar-item-active: linear-gradient(90deg, rgba(0, 180, 216, 0.42) 0%, rgba(0, 119, 182, 0.22) 100%);
   --sidebar-border: rgba(255, 255, 255, 0.12);
 
-  /* Card & Glass Tokens (White Clean Modern Elevation) */
-  --bg-card: #ffffff;
-  --bg-card-hover: #ffffff;
-  --bg-glass: rgba(255, 255, 255, 0.85);
-  --bg-glass-card: #ffffff;
-  --bg-glass-card-border: #e2edf8;
-  --border-subtle: #e2edf8;
-  --border-focus: #0284c7;
+  /* Card & Glass Tokens (Premium Dark Navy Blue Glassmorphism) */
+  --bg-card: rgba(15, 39, 70, 0.88);
+  --bg-card-hover: rgba(20, 52, 92, 0.94);
+  --bg-glass: rgba(15, 39, 70, 0.88);
+  --bg-glass-card: rgba(15, 39, 70, 0.88);
+  --bg-glass-card-border: rgba(100, 190, 220, 0.25);
+  --border-subtle: rgba(100, 190, 220, 0.25);
+  --border-focus: #00b4d8;
 
   /* Primary & Accent Cyan/Blue Colors */
   --primary-navy: #021a36;
-  --primary-blue: #0284c7;
+  --primary-blue: #00b4d8;
   --royal-blue: #0284c7;
-  --sky-blue: #00b4d8;
-  --sky-blue-light: #0284c7;
+  --sky-blue: #38bdf8;
+  --sky-blue-light: #38bdf8;
   --cyan-primary: #00b4d8;
-  --cyan-dark: #0077b6;
+  --cyan-dark: #38bdf8;
   --cyan-deep: #03045e;
   --cyan-glow: rgba(0, 180, 216, 0.35);
 
@@ -43,25 +43,25 @@
 
   /* Gradient Badges */
   --badge-cyan-gradient: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
-  --badge-cyan-light: rgba(0, 180, 216, 0.12);
+  --badge-cyan-light: rgba(0, 180, 216, 0.18);
 
   /* Status Colors */
   --status-on-time: #10b981;
-  --status-on-time-bg: #ecfdf5;
-  --status-boarding: #0284c7;
-  --status-boarding-bg: #f0f9ff;
+  --status-on-time-bg: rgba(16, 185, 129, 0.18);
+  --status-boarding: #38bdf8;
+  --status-boarding-bg: rgba(56, 189, 248, 0.18);
   --status-delayed: #f59e0b;
-  --status-delayed-bg: #fffbeb;
+  --status-delayed-bg: rgba(245, 158, 11, 0.18);
   --status-cancelled: #ef4444;
-  --status-cancelled-bg: #fef2f2;
+  --status-cancelled-bg: rgba(239, 68, 68, 0.18);
 
-  /* Text & Highlight Colors (Crisp Slate/Navy on Light Canvas) */
+  /* Text & Highlight Colors (Crisp White/Slate on Dark Glass) */
   --text-white: #ffffff;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-sky: #0284c7;
-  --text-cyan: #0077b6;
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-sky: #38bdf8;
+  --text-cyan: #38bdf8;
 
   /* Typography */
   --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -69,11 +69,11 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Shadows & Glassmorphic Blur */
-  --glass-blur: blur(16px);
+  --glass-blur: blur(14px);
   --glass-blur-heavy: blur(24px);
-  --shadow-sm: 0 2px 8px rgba(0, 40, 100, 0.04);
-  --shadow-md: 0 6px 20px rgba(0, 50, 120, 0.06), 0 2px 6px rgba(0, 50, 120, 0.03);
-  --shadow-lg: 0 14px 35px rgba(0, 60, 140, 0.08), 0 4px 12px rgba(0, 60, 140, 0.04);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 18px 45px rgba(0, 0, 0, 0.45);
   --shadow-glow-cyan: 0 4px 18px rgba(0, 180, 216, 0.35);
 
   /* Borders & Radius */
@@ -99,10 +99,8 @@
 html, body {
   width: 100%;
   min-height: 100%;
-  background-color: var(--bg-primary);
-  background-image: 
-    radial-gradient(at 100% 0%, rgba(0, 180, 216, 0.12) 0px, transparent 45%),
-    radial-gradient(at 0% 100%, rgba(0, 119, 182, 0.08) 0px, transparent 40%);
+  background-color: #ffffff;
+  background-image: none;
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-main);
@@ -149,14 +147,14 @@ button {
   height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #edf4fb;
+  background: #071026;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #1e3a8a;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #0284c7;
 }
 
 /* Utility Animations */
@@ -193,13 +191,16 @@ button {
 
 /* Card & Glass Panels Utility */
 .glass-panel {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: rgba(15, 39, 70, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(100, 190, 220, 0.25);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
   transition: all var(--transition-normal);
+  color: #ffffff;
 }
 
 .glass-panel:hover {

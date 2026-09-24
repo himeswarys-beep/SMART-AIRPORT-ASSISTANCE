@@ -27,39 +27,6 @@ export const AirportProvider = ({ children }) => {
     contactNumber: '+91 98401 23456'
   });
 
-  // 1. Current Passenger & Authentication State
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [user, setUser] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    passportNumber: '',
-    dob: '',
-    gender: '',
-    nationality: '',
-    passportExpiry: '',
-    passportCountry: '',
-    pnr: '',
-    flightNumber: '',
-    airline: '',
-    from: '',
-    fromCity: '',
-    fromTerminal: '',
-    to: '',
-    toCity: '',
-    toTerminal: '',
-    departureTime: '',
-    boardingTime: '',
-    gate: '',
-    gateOriginal: '',
-    seat: '',
-    seatType: '',
-    zone: '',
-    status: '',
-    barcode: '',
-    baggageTag: ''
-  });
-
   // Active Booking State (persisted in localStorage)
   const [activeBooking, setActiveBooking] = useState(() => {
     try {
@@ -67,6 +34,51 @@ export const AirportProvider = ({ children }) => {
       if (saved) return JSON.parse(saved);
     } catch (e) {}
     return null;
+  });
+
+  // 1. Current Passenger & Authentication State
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [user, setUser] = useState(() => {
+    const baseUser = {
+      name: 'Arun Kumar',
+      email: 'arun.kumar@aerova.in',
+      phone: '+91 98401 23456',
+      passportNumber: 'Z9840123',
+      dob: '1994-08-15',
+      gender: 'Male',
+      nationality: 'Indian',
+      passportExpiry: '2032-11-20',
+      passportCountry: 'India'
+    };
+
+    try {
+      const saved = localStorage.getItem('smart_airport_active_booking');
+      if (saved) {
+        const bk = JSON.parse(saved);
+        return {
+          ...baseUser,
+          pnr: bk.pnr,
+          flightNumber: bk.flightNumber,
+          airline: bk.airline,
+          airlineCode: bk.airlineCode || '6E',
+          from: bk.from,
+          fromCity: bk.fromCity,
+          fromTerminal: bk.fromTerminal,
+          to: bk.to,
+          toCity: bk.toCity,
+          toTerminal: bk.toTerminal,
+          departureTime: bk.depTime,
+          boardingTime: bk.depTime,
+          departureDate: bk.departureDate,
+          gate: bk.gate || 'A12',
+          seat: bk.seatsAssigned?.[0] || bk.seat || '12A',
+          baggageTag: bk.baggageTag || `TAG-${bk.airlineCode || '6E'}-99214`,
+          barcode: bk.barcode || `M1${(bk.passengers?.[0]?.fullName || baseUser.name).toUpperCase().replace(/\s+/g, '/')} E${bk.pnr} ${bk.from}${bk.to}${bk.airlineCode || '6E'} ${bk.flightNumber?.replace(/\s+/g, '') || ''}`
+        };
+      }
+    } catch (e) {}
+
+    return baseUser;
   });
 
   // Active Terminal Filter
@@ -494,10 +506,32 @@ export const AirportProvider = ({ children }) => {
     addToast('Booking Saved to My Trips', `PNR: ${newBooking.pnr} added to itinerary`, 'success');
   };
 
+  const clearActiveBooking = () => {
+    setActiveBooking(null);
+    try {
+      localStorage.removeItem('smart_airport_active_booking');
+    } catch (e) {}
+    setUser((prev) => ({
+      name: prev.name || 'Arun Kumar',
+      email: prev.email || 'arun.kumar@aerova.in',
+      phone: prev.phone || '+91 98401 23456',
+      passportNumber: prev.passportNumber || 'Z9840123',
+      dob: prev.dob || '1994-08-15',
+      gender: prev.gender || 'Male',
+      nationality: prev.nationality || 'Indian',
+      passportExpiry: prev.passportExpiry || '2032-11-20',
+      passportCountry: prev.passportCountry || 'India'
+    }));
+    addToast('Booking Reset', 'Active booking cleared', 'info');
+  };
+
   const cancelBooking = (tripId) => {
     setMyTrips((prev) =>
       prev.map((t) => (t.id === tripId || t.pnr === tripId ? { ...t, tripStatus: 'Cancelled', flightStatus: 'Cancelled' } : t))
     );
+    if (!tripId || (activeBooking && (activeBooking.id === tripId || activeBooking.pnr === tripId))) {
+      clearActiveBooking();
+    }
   };
 
   return (
@@ -513,6 +547,7 @@ export const AirportProvider = ({ children }) => {
         setUser,
         activeBooking,
         setActiveBooking,
+        clearActiveBooking,
         activeAirport,
         setActiveAirport,
         notifications,

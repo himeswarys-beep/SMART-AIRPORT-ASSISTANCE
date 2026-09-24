@@ -73,7 +73,7 @@ export const Dashboard = () => {
       title: 'Smart Boarding Assistant',
       description: 'Digital boarding pass with scannable QR code, live gate countdown, seat preview, and zone alerts.',
       icon: QrCode,
-      badgeText: `Gate ${user.gate}`,
+      badgeText: bk ? `Gate ${bk.gate}` : 'Smart Pass',
       badgeType: 'peach'
     },
     {
@@ -285,9 +285,9 @@ export const Dashboard = () => {
             </div>
 
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              <Link to="/flight-booking" className="btn-primary" style={{ padding: '9px 16px', fontSize: '0.84rem' }}>
-                <Plane size={15} />
-                <span>Book Flight</span>
+              <Link to="/boarding" className="btn-primary" style={{ padding: '9px 16px', fontSize: '0.84rem' }}>
+                <QrCode size={15} />
+                <span>View Boarding Pass</span>
               </Link>
 
               <Link to="/navigation" className="btn-outline" style={{ padding: '9px 16px', fontSize: '0.84rem' }}>
@@ -348,10 +348,16 @@ export const Dashboard = () => {
             <Luggage size={22} />
           </div>
           <div className="stat-card-info">
-            <div className="stat-card-label">Baggage ({baggageStatus.tag})</div>
-            <div className="stat-card-val">Cargo Hold B</div>
+            <div className="stat-card-label">
+              {bk ? `Baggage (${bk.baggageTag || baggageStatus.tag})` : 'Baggage Tracker'}
+            </div>
+            <div className="stat-card-val">
+              {bk ? 'Cargo Hold B' : 'No Baggage Checked'}
+            </div>
             <div className="stat-card-footer">
-              <span className="trend-indicator">↑ RFID Verified</span>
+              <span className="trend-indicator">
+                {bk ? '↑ RFID Verified' : 'Book a flight to track baggage'}
+              </span>
             </div>
           </div>
         </div>

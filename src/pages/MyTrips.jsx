@@ -4,6 +4,7 @@ import { TripCard } from '../components/booking/TripCard';
 import { Link } from 'react-router-dom';
 import { Luggage, Plane, Plus, X, Download, Printer, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import BoardingPassCard from '../components/booking/BoardingPassCard';
 
 export const MyTrips = () => {
   const { myTrips, cancelBooking, addToast } = useAirport();
@@ -115,8 +116,8 @@ export const MyTrips = () => {
             position: 'fixed',
             inset: 0,
             zIndex: 999,
-            background: 'rgba(5, 11, 24, 0.85)',
-            backdropFilter: 'blur(10px)',
+            background: 'rgba(5, 11, 24, 0.88)',
+            backdropFilter: 'blur(12px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -124,67 +125,39 @@ export const MyTrips = () => {
           }}
         >
           <div
-            className="glass-panel printable-ticket"
             style={{
-              maxWidth: '640px',
+              maxWidth: '920px',
               width: '100%',
-              padding: '32px',
-              background: '#ffffff',
-              color: '#0f172a',
-              borderRadius: '16px',
-              position: 'relative'
+              position: 'relative',
+              maxHeight: '90vh',
+              overflowY: 'auto'
             }}
           >
             <button
               type="button"
               onClick={() => setSelectedTicketModal(null)}
-              style={{ position: 'absolute', top: '16px', right: '16px', background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer' }}
+              style={{
+                position: 'absolute',
+                top: '6px',
+                right: '12px',
+                background: '#ef4444',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                cursor: 'pointer',
+                zIndex: 1000,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+              }}
             >
-              <X size={18} color="#0f172a" />
+              <X size={18} color="#ffffff" />
             </button>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #e2e8f0', paddingBottom: '16px', marginBottom: '20px' }}>
-              <div>
-                <h2 style={{ fontSize: '1.4rem', color: '#1e3a8a', fontWeight: 900 }}>{selectedTicketModal.airline} E-Ticket</h2>
-                <div style={{ fontSize: '0.8rem', color: '#64748b' }}>Smart Airport Assistant Official Flight Pass</div>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>PNR CODE</div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#1e3a8a', fontFamily: 'monospace' }}>{selectedTicketModal.pnr}</div>
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px', fontSize: '0.9rem' }}>
-              <div>
-                <strong>Flight:</strong> {selectedTicketModal.flightNumber} ({selectedTicketModal.aircraft})<br />
-                <strong>From:</strong> {selectedTicketModal.from} - {selectedTicketModal.fromCity}<br />
-                <strong>Departure:</strong> {selectedTicketModal.depTime} IST ({selectedTicketModal.departureDate})<br />
-                <strong>Terminal:</strong> {selectedTicketModal.fromTerminal || 'T2'}
-              </div>
-              <div>
-                <strong>To:</strong> {selectedTicketModal.to} - {selectedTicketModal.toCity}<br />
-                <strong>Arrival:</strong> {selectedTicketModal.arrTime} IST<br />
-                <strong>Seat:</strong> {selectedTicketModal.seat || '12A'}<br />
-                <strong>Gate:</strong> {selectedTicketModal.gate || 'A12'}
-              </div>
-            </div>
-
-            <div style={{ borderTop: '1px dashed #cbd5e1', paddingTop: '16px', marginBottom: '20px', fontSize: '0.85rem' }}>
-              <strong>Passenger:</strong> {selectedTicketModal.passengers?.[0]?.fullName || selectedTicketModal.passenger || 'Arun Kumar'}<br />
-              <strong>Total Paid:</strong> ₹{selectedTicketModal.totalPaid?.toLocaleString('en-IN')}<br />
-              <strong>Status:</strong> {selectedTicketModal.tripStatus || 'CONFIRMED'}
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-              <button
-                type="button"
-                onClick={() => window.print()}
-                style={{ padding: '8px 20px', background: '#2563eb', color: '#ffffff', borderRadius: '8px', border: 'none', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-              >
-                <Printer size={16} />
-                <span>Print Ticket</span>
-              </button>
-            </div>
+            <BoardingPassCard flightData={selectedTicketModal} theme="reference" />
           </div>
         </div>
       )}

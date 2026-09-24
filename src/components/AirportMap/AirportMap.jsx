@@ -127,9 +127,9 @@ export const AirportMap = ({
           viewBox={`0 0 ${width} ${height}`}
           className={`airport-svg-viewport ${isIsometric ? 'isometric-mode' : 'flat-mode'}`}
           style={{
-            transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel}) ${isIsometric ? 'rotateX(18deg) rotateZ(-3deg)' : ''}`,
+            transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel}) ${isIsometric ? 'perspective(1200px) rotateX(38deg) rotateZ(-10deg)' : ''}`,
             transformOrigin: 'center center',
-            transition: isPanning || draggingMarkerId ? 'none' : 'transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)'
+            transition: isPanning || draggingMarkerId ? 'none' : 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
         >
           {/* Background Click catcher */}

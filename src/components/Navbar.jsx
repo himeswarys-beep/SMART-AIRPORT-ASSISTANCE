@@ -19,7 +19,7 @@ import { airportsList } from '../data/airports';
 import { ASSETS } from '../assets/images';
 
 export const Navbar = ({ onOpenNotifications }) => {
-  const { user, activeAirport, setActiveAirport, notifications, isLoggedIn, setIsLoggedIn, language, setLanguage } = useAirport();
+  const { user, activeBooking, clearActiveBooking, activeAirport, setActiveAirport, notifications, isLoggedIn, setIsLoggedIn, language, setLanguage } = useAirport();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAirportDropdown, setShowAirportDropdown] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -56,12 +56,25 @@ export const Navbar = ({ onOpenNotifications }) => {
     <header className="top-navbar">
       {/* Brand Logo & Name */}
       <Link to="/dashboard" className="navbar-brand">
-        <img src={ASSETS.logo} alt="Smart Airport Assistant" className="brand-logo-img" />
+        <img src={ASSETS.logo} alt="Aerova" className="brand-logo-img" />
         <div className="brand-info">
-          <span className="brand-title">Smart Airport Assistant</span>
-          <span className="brand-subtitle">We Assist You Every Step</span>
+          <span className="brand-title" style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 800, color: 'var(--primary-navy)' }}>
+            Aerova
+          </span>
+          <span className="brand-subtitle" style={{ fontSize: '0.7rem', color: '#0284c7', fontWeight: 700, letterSpacing: '0.04em' }}>
+            Your Journey, Our Priority
+          </span>
         </div>
       </Link>
+
+      {/* Header Reference Tagline */}
+      <div className="header-reference-tagline" style={{ display: 'none', alignItems: 'center', gap: '8px', padding: '6px 14px', background: 'rgba(0, 180, 216, 0.08)', border: '1px solid rgba(0, 180, 216, 0.2)', borderRadius: '9999px', fontSize: '0.78rem', color: 'var(--cyan-dark)', fontWeight: 700 }}>
+        <span>Smarter Travel</span>
+        <span style={{ color: 'var(--cyan-primary)' }}>•</span>
+        <span>Seamless Experience</span>
+        <span style={{ color: 'var(--cyan-primary)' }}>•</span>
+        <span>All in One App</span>
+      </div>
 
       {/* Global Interactive Search Bar */}
       <form className="navbar-search" onSubmit={handleSearchSubmit}>
@@ -211,7 +224,9 @@ export const Navbar = ({ onOpenNotifications }) => {
             </div>
             <div className="user-info">
               <span className="user-name">{user.name}</span>
-              <span className="user-seat-tag">Seat {user.seat} • {user.flightNumber}</span>
+              <span className="user-seat-tag">
+                {user.flightNumber ? `Seat ${user.seat} • ${user.flightNumber}` : 'Passenger Profile'}
+              </span>
             </div>
             <ChevronDown size={14} color="var(--text-muted)" />
           </div>
@@ -234,7 +249,7 @@ export const Navbar = ({ onOpenNotifications }) => {
                 <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{user.name}</div>
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{user.email}</div>
                 <div style={{ fontSize: '0.74rem', color: 'var(--cyan-dark)', marginTop: '4px', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
-                  PNR: {user.pnr} | Flight {user.flightNumber}
+                  {user.pnr ? `PNR: ${user.pnr} | Flight ${user.flightNumber}` : 'No Active Flight Booked'}
                 </div>
               </div>
 
@@ -271,8 +286,32 @@ export const Navbar = ({ onOpenNotifications }) => {
                 }}
               >
                 <Compass size={16} color="var(--cyan-dark)" />
-                <span>Navigate to Gate {user.gate}</span>
+                <span>{user.gate ? `Navigate to Gate ${user.gate}` : 'Airport Navigation'}</span>
               </Link>
+
+              {activeBooking && (
+                <div
+                  onClick={() => {
+                    setShowUserDropdown(false);
+                    clearActiveBooking();
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: '8px 10px',
+                    borderRadius: '8px',
+                    fontSize: '0.85rem',
+                    color: '#f97316',
+                    cursor: 'pointer',
+                    marginTop: '6px',
+                    borderTop: '1px solid var(--border-subtle)'
+                  }}
+                >
+                  <LogOut size={16} />
+                  <span>Reset Active Booking</span>
+                </div>
+              )}
 
               <div
                 onClick={() => {
@@ -289,8 +328,8 @@ export const Navbar = ({ onOpenNotifications }) => {
                   fontSize: '0.85rem',
                   color: 'var(--status-cancelled)',
                   cursor: 'pointer',
-                  marginTop: '6px',
-                  borderTop: '1px solid var(--border-subtle)'
+                  marginTop: activeBooking ? '2px' : '6px',
+                  borderTop: activeBooking ? 'none' : '1px solid var(--border-subtle)'
                 }}
               >
                 <LogOut size={16} />

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { CheckCircle2, Download, Plane, QrCode, Compass, ArrowLeftRight, Luggage, Printer, X, Sparkles } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { CheckCircle2, Download, Plane, QrCode, Compass, ArrowLeftRight, Luggage, Printer, X, Sparkles, Home } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useAirport } from '../../context/AirportContext';
+import BoardingPassCard from './BoardingPassCard';
 
 export const BookingConfirmationView = ({ booking, onNewBooking }) => {
   const { addToast } = useAirport();
+  const navigate = useNavigate();
   const [showPrintModal, setShowPrintModal] = useState(false);
 
   React.useEffect(() => {
@@ -163,7 +165,12 @@ export const BookingConfirmationView = ({ booking, onNewBooking }) => {
 
         {/* 3. ACTION BUTTONS */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', paddingTop: '18px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          <button type="button" className="btn-primary" onClick={handleDownloadTicket}>
+          <button type="button" className="btn-primary" onClick={() => navigate('/dashboard')} style={{ padding: '10px 20px', fontSize: '0.9rem', background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' }}>
+            <Home size={16} />
+            <span>Return to Dashboard</span>
+          </button>
+
+          <button type="button" className="btn-outline" onClick={handleDownloadTicket}>
             <Download size={16} />
             <span>Download & Print Ticket</span>
           </button>
@@ -202,8 +209,8 @@ export const BookingConfirmationView = ({ booking, onNewBooking }) => {
             position: 'fixed',
             inset: 0,
             zIndex: 999,
-            background: 'rgba(5, 11, 24, 0.85)',
-            backdropFilter: 'blur(10px)',
+            background: 'rgba(5, 11, 24, 0.88)',
+            backdropFilter: 'blur(12px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -211,67 +218,39 @@ export const BookingConfirmationView = ({ booking, onNewBooking }) => {
           }}
         >
           <div
-            className="glass-panel printable-ticket"
             style={{
-              maxWidth: '640px',
+              maxWidth: '920px',
               width: '100%',
-              padding: '32px',
-              background: '#ffffff',
-              color: '#0f172a',
-              borderRadius: '16px',
-              position: 'relative'
+              position: 'relative',
+              maxHeight: '90vh',
+              overflowY: 'auto'
             }}
           >
             <button
               type="button"
               onClick={() => setShowPrintModal(false)}
-              style={{ position: 'absolute', top: '16px', right: '16px', background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer' }}
+              style={{
+                position: 'absolute',
+                top: '6px',
+                right: '12px',
+                background: '#ef4444',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                cursor: 'pointer',
+                zIndex: 1000,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+              }}
             >
-              <X size={18} color="#0f172a" />
+              <X size={18} color="#ffffff" />
             </button>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #e2e8f0', paddingBottom: '16px', marginBottom: '20px' }}>
-              <div>
-                <h2 style={{ fontSize: '1.4rem', color: '#1e3a8a', fontWeight: 900 }}>{booking.airline} E-Ticket</h2>
-                <div style={{ fontSize: '0.8rem', color: '#64748b' }}>Smart Airport Assistant Official Demo Booking</div>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>PNR CODE</div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#1e3a8a', fontFamily: 'monospace' }}>{booking.pnr}</div>
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px', fontSize: '0.9rem' }}>
-              <div>
-                <strong>Flight:</strong> {booking.flightNumber} ({booking.aircraft})<br />
-                <strong>From:</strong> {booking.from} - {booking.fromCity}<br />
-                <strong>Departure:</strong> {booking.depTime} IST ({booking.departureDate})<br />
-                <strong>Terminal:</strong> {booking.fromTerminal}
-              </div>
-              <div>
-                <strong>To:</strong> {booking.to} - {booking.toCity}<br />
-                <strong>Arrival:</strong> {booking.arrTime} IST<br />
-                <strong>Seat:</strong> {booking.seatsAssigned?.join(', ') || booking.seat || '12A'}<br />
-                <strong>Gate:</strong> {booking.gate || 'A12'}
-              </div>
-            </div>
-
-            <div style={{ borderTop: '1px dashed #cbd5e1', paddingTop: '16px', marginBottom: '20px', fontSize: '0.85rem' }}>
-              <strong>Passenger(s):</strong> {booking.passengers?.map((p) => p.fullName).join(', ') || 'Arun Kumar'}<br />
-              <strong>Total Paid:</strong> ₹{booking.totalPaid?.toLocaleString('en-IN')}<br />
-              <strong>Status:</strong> Confirmed & Paid
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-              <button
-                type="button"
-                onClick={() => window.print()}
-                style={{ padding: '8px 20px', background: '#2563eb', color: '#ffffff', borderRadius: '8px', border: 'none', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-              >
-                <Printer size={16} />
-                <span>Print Ticket</span>
-              </button>
-            </div>
+            <BoardingPassCard flightData={booking} theme="reference" />
           </div>
         </div>
       )}
