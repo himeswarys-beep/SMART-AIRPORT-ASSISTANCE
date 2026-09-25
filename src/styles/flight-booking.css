@@ -8,10 +8,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  background: rgba(15, 39, 70, 0.88);
+  background: rgba(193, 205, 221, 0.88);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(100, 190, 220, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.745);
   padding: 14px 20px;
   border-radius: var(--radius-lg);
   margin-bottom: 24px;
@@ -35,7 +35,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(10, 25, 47, 0.6);
+  background: rgba(43, 92, 165, 0.796);
   border: 1px solid rgba(100, 190, 220, 0.3);
   display: flex;
   align-items: center;

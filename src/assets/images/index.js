@@ -2,14 +2,14 @@
 // Users can easily swap background, logo, hero illustration, and meal images here.
 
 import logoImg from './logo.jpeg';
-import airportBackgroundImg from './airport-background.svg';
-import dashboardHeroImg from './dashboard-hero.svg';
-import mealSouthIndian from './meal-south-indian.svg';
-import mealBiryani from './meal-biryani.svg';
-import mealJain from './meal-jain.svg';
-import mealSalad from './meal-salad.svg';
-import mealKids from './meal-kids.svg';
-import mealPaneer from './meal-paneer.svg';
+import airportBackgroundImg from './bakgrund.jpg';
+import dashboardHeroImg from './bakgrund.jpg';
+import mealSouthIndian from './istockphoto-481149282-612x612.jpg';
+import mealBiryani from './biryani images.jpg';
+import mealJain from './meal jain images.jpg';
+import mealSalad from './salad.jpg';
+import mealKids from './kid istockphoto-1138234731-612x612.jpg';
+import mealPaneer from './tandoor.jpg';
 
 export const ASSETS = {
   logo: logoImg,

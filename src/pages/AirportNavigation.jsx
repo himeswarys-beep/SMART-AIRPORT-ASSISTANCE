@@ -114,12 +114,12 @@ export const AirportNavigation = () => {
       <div style={{ marginBottom: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
           <span className="hero-tag">Wayfinder 3D</span>
-          <span style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+          <span style={{ fontSize: '0.84rem', color: '#043d61ff' }}>
             {activeAirport?.name || 'Tamil Nadu Airport'} • {activeAirport?.terminalName || 'Main Terminal'}
           </span>
         </div>
         <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Airport Navigation & Indoor GPS</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <p style={{ color: '#043d61ff', fontSize: '0.9rem' }}>
           Interactive terminal floor blueprint with real-time indoor pathfinding, walking distance estimates, and accessibility routing for {activeAirport?.name || 'your airport'}.
         </p>
       </div>

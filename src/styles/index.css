@@ -89,6 +89,20 @@
   --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+[data-theme="dark"] {
+  --bg-primary: #020617;
+  --bg-secondary: #0f172a;
+  --bg-tertiary: #1e293b;
+  --bg-canvas: #020617;
+  --text-primary: #f8fafc;
+  
+  --bg-card: rgba(15, 23, 42, 0.95);
+  --bg-card-hover: rgba(30, 41, 59, 0.95);
+  --bg-glass: rgba(15, 23, 42, 0.95);
+  --bg-glass-card: rgba(15, 23, 42, 0.95);
+  --border-subtle: rgba(56, 189, 248, 0.15);
+}
+
 /* Reset & Global */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -99,7 +113,7 @@
 html, body {
   width: 100%;
   min-height: 100%;
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
   background-image: none;
   background-attachment: fixed;
   color: var(--text-primary);

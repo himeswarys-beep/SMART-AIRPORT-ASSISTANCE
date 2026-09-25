@@ -228,7 +228,7 @@ export const PassportDetails = () => {
                     className="form-input"
                     value={formData.gender}
                     onChange={handleChange}
-                    style={{ background: 'transparent', color: '#ffffff' }}
+                    style={{ background: '#f8fbfe', color: '#0f172a' }}
                     required
                   >
                     <option value="Male" style={{ background: '#0a1228' }}>{t.male}</option>

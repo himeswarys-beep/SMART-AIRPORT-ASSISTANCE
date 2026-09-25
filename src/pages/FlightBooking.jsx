@@ -233,7 +233,7 @@ export const FlightBooking = () => {
       <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <span className="hero-tag" style={{ marginBottom: '4px' }}>Indian Domestic Flight Booking</span>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Flight Booking System</h1>
+          <h1 style={{ fontSize: '2rem',color:'#043d61ff', fontWeight: 800 }}>Flight Booking System</h1>
         </div>
 
         {/* View Compare Flights button if results or compare active */}

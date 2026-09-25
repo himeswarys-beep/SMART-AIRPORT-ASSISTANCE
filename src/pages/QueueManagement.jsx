@@ -36,12 +36,12 @@ export const QueueManagement = () => {
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
           <span className="hero-tag">Computer Vision Crowd Analytics</span>
-          <span style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+          <span style={{ fontSize: '0.84rem', color: '#043d61ff' }}>
             {activeAirport.name} (All Terminals)
           </span>
         </div>
-        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Airport Queue & Crowd Management</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <h1 style={{ fontSize: '2rem',color:'#043d61ff', fontWeight: 800 }}>Airport Queue & Crowd Management</h1>
+        <p style={{ color: '#043d61ff', fontSize: '0.9rem' }}>
           AI-driven live crowd density tracking across check-in desks, security lanes, and boarding gates to minimize passenger wait times.
         </p>
       </div>

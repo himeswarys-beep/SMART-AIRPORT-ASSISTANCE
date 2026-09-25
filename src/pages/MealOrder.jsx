@@ -63,12 +63,12 @@ export const MealOrder = () => {
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
           <span className="hero-tag">Galley Kitchen Pre-Order</span>
-          <span style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+          <span style={{ fontSize: '0.84rem', color: '#043d61ff' }}>
             Seat {user.seat} • Flight {user.flightNumber}
           </span>
         </div>
-        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>In-Flight Gourmet Meal Pre-Order</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <h1 style={{ fontSize: '2rem',color:'#043d61ff', fontWeight: 800 }}>In-Flight  Meal Pre-Order</h1>
+        <p style={{ color: '#043d61ff', fontSize: '0.9rem' }}>
           Pre-book freshly curated hot meals and dietary-specific platters served directly to your assigned seat during flight.
         </p>
       </div>
@@ -94,8 +94,8 @@ export const MealOrder = () => {
               whiteSpace: 'nowrap',
               borderRadius: '9999px',
               border: `1px solid ${selectedCategory === cat.id ? 'var(--sky-blue)' : 'rgba(56, 189, 248, 0.2)'}`,
-              background: selectedCategory === cat.id ? 'var(--royal-blue)' : 'rgba(16, 33, 71, 0.5)',
-              color: selectedCategory === cat.id ? '#ffffff' : 'var(--text-secondary)',
+              background: selectedCategory === cat.id ? 'var(--sky-blue)' : '#043d61ff',
+              color: selectedCategory === cat.id ? '#041e54ff' : '#ffffff',
               fontSize: '0.84rem',
               fontWeight: 600
             }}

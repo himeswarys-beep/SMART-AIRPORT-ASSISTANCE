@@ -44,8 +44,8 @@ export const MyTrips = () => {
       <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <span className="hero-tag" style={{ marginBottom: '6px' }}>Passenger Itinerary</span>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>My Trips & Bookings</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+          <h1 style={{ fontSize: '2rem',color:'#043d61ff', fontWeight: 800 }}>My Trips & Bookings</h1>
+          <p style={{ color: '#043d61ff', fontSize: '0.9rem' }}>
             Manage upcoming domestic flights, download electronic tickets, swap seats, or track live flight status.
           </p>
         </div>
@@ -73,7 +73,7 @@ export const MyTrips = () => {
               fontSize: '0.85rem',
               fontWeight: 700,
               background: activeTab === tab.id ? 'var(--gradient-sky)' : 'transparent',
-              color: activeTab === tab.id ? '#ffffff' : 'var(--text-secondary)',
+              color: activeTab === tab.id ? '#136daaff' : 'black',
               border: activeTab === tab.id ? '1px solid var(--sky-blue)' : '1px solid transparent',
               transition: 'all 0.2s ease'
             }}

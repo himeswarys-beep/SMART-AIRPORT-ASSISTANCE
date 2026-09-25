@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Plane,
@@ -26,9 +27,18 @@ import { useAirport } from '../context/AirportContext';
 import { ModuleCard } from '../components/ModuleCard';
 import { ASSETS } from '../assets/images';
 
+// New Supabase Integration Components
+import { FlightSearch } from '../components/FlightSearch';
+import { FlightStatusCard } from '../components/FlightStatusCard';
+import { DelayPredictionCard } from '../components/DelayPredictionCard';
+import { QueueCrowdPredictionCard } from '../components/QueueCrowdPredictionCard';
+import { GateInformationCard } from '../components/GateInformationCard';
+import { BaggageTrackingCard } from '../components/BaggageTrackingCard';
+
 export const Dashboard = () => {
   const { user, activeBooking, boardingCountdown, activeAirport, queueMetrics, baggageStatus, delayPrediction, myTrips, flights } = useAirport();
   const navigate = useNavigate();
+  const [searchedData, setSearchedData] = useState(null);
 
   const padZero = (n) => (n < 10 ? `0${n}` : n);
 
@@ -320,76 +330,97 @@ export const Dashboard = () => {
         )}
       </section>
 
+      
+
       {/* --------------------------------------------------------------------
-          2. QUICK GLANCE METRIC STAT CARDS (4 Stat Cards with Trend Badges)
+          2. SUPABASE LIVE FLIGHT SEARCH & DASHBOARD CARDS
           -------------------------------------------------------------------- */}
-      <section className="stat-cards-grid">
-        {/* Card 1: Flight Status */}
-        <div className="stat-card">
-          <div className="icon-badge-cyan">
-            <Plane size={22} />
+      <section style={{ marginBottom: '32px' }}>
+        <FlightSearch onFlightDataFetched={setSearchedData} />
+        
+        {searchedData && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginTop: '16px' }}>
+            <FlightStatusCard flight={searchedData.flight} />
+            <DelayPredictionCard delay={searchedData.delay} />
+            <QueueCrowdPredictionCard queue={searchedData.queue} />
+            <GateInformationCard gate={searchedData.gate} />
+            <BaggageTrackingCard baggage={searchedData.baggage} />
           </div>
-          <div className="stat-card-info">
-            <div className="stat-card-label">Flight Status</div>
-            <div className="stat-card-val">
-              {bk ? `On Time • ${bk.flightNumber}` : 'No Flight Booked'}
-            </div>
-            <div className="stat-card-footer">
-              <span className="trend-indicator">
-                {bk ? '↑ 98.4% On Schedule' : 'Book a flight to get started'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 2: Baggage Status */}
-        <div className="stat-card">
-          <div className="icon-badge-cyan">
-            <Luggage size={22} />
-          </div>
-          <div className="stat-card-info">
-            <div className="stat-card-label">
-              {bk ? `Baggage (${bk.baggageTag || baggageStatus.tag})` : 'Baggage Tracker'}
-            </div>
-            <div className="stat-card-val">
-              {bk ? 'Cargo Hold B' : 'No Baggage Checked'}
-            </div>
-            <div className="stat-card-footer">
-              <span className="trend-indicator">
-                {bk ? '↑ RFID Verified' : 'Book a flight to track baggage'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 3: Security Queue */}
-        <div className="stat-card">
-          <div className="icon-badge-cyan">
-            <ShieldCheck size={22} />
-          </div>
-          <div className="stat-card-info">
-            <div className="stat-card-label">Security Queue</div>
-            <div className="stat-card-val">DigiYatra Gate 2</div>
-            <div className="stat-card-footer">
-              <span className="trend-indicator">↑ 2m Fast Track</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 4: AI Weather & Forecast */}
-        <div className="stat-card">
-          <div className="icon-badge-cyan">
-            <CloudSun size={22} />
-          </div>
-          <div className="stat-card-info">
-            <div className="stat-card-label">Weather & AI Risk</div>
-            <div className="stat-card-val">Clear • 29°C</div>
-            <div className="stat-card-footer">
-              <span className="trend-indicator">↑ Low Turbulence</span>
-            </div>
-          </div>
-        </div>
+        )}
       </section>
+
+      {/* --------------------------------------------------------------------
+          3. QUICK GLANCE METRIC STAT CARDS (4 Stat Cards with Trend Badges)
+          -------------------------------------------------------------------- */}
+      {!searchedData && (
+        <section className="stat-cards-grid">
+          {/* Card 1: Flight Status */}
+          <div className="stat-card">
+            <div className="icon-badge-cyan">
+              <Plane size={22} />
+            </div>
+            <div className="stat-card-info">
+              <div className="stat-card-label">Flight Status</div>
+              <div className="stat-card-val">
+                {bk ? `On Time • ${bk.flightNumber}` : 'No Flight Booked'}
+              </div>
+              <div className="stat-card-footer">
+                <span className="trend-indicator">
+                  {bk ? '↑ 98.4% On Schedule' : 'Book a flight to get started'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: Baggage Status */}
+          <div className="stat-card">
+            <div className="icon-badge-cyan">
+              <Luggage size={22} />
+            </div>
+            <div className="stat-card-info">
+              <div className="stat-card-label">
+                {bk ? `Baggage (${bk.baggageTag || baggageStatus.tag})` : 'Baggage Tracker'}
+              </div>
+              <div className="stat-card-val">
+                {bk ? 'Cargo Hold B' : 'No Baggage Checked'}
+              </div>
+              <div className="stat-card-footer">
+                <span className="trend-indicator">
+                  {bk ? '↑ RFID Verified' : 'Book a flight to track baggage'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3: Security Queue */}
+          <div className="stat-card">
+            <div className="icon-badge-cyan">
+              <ShieldCheck size={22} />
+            </div>
+            <div className="stat-card-info">
+              <div className="stat-card-label">Security Queue</div>
+              <div className="stat-card-val">DigiYatra Gate 2</div>
+              <div className="stat-card-footer">
+                <span className="trend-indicator">↑ 2m Fast Track</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 4: AI Weather & Forecast */}
+          <div className="stat-card">
+            <div className="icon-badge-cyan">
+              <CloudSun size={22} />
+            </div>
+            <div className="stat-card-info">
+              <div className="stat-card-label">Weather & AI Risk</div>
+              <div className="stat-card-val">Clear • 29°C</div>
+              <div className="stat-card-footer">
+                <span className="trend-indicator">↑ Low Turbulence</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* --------------------------------------------------------------------
           3. MAIN SPLIT BODY (3x3 Modules Grid + Right Side Cards)
@@ -400,7 +431,7 @@ export const Dashboard = () => {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
             <div>
               <h2 style={{ fontSize: '1.35rem', fontWeight: 800 }}>Airport Assistance Services</h2>
-              <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+              <p style={{ fontSize: '0.84rem', color: '#043d61ff' }}>
                 Select any passenger service below for instant interactive guidance.
               </p>
             </div>

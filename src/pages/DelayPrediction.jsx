@@ -26,12 +26,12 @@ export const DelayPrediction = () => {
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
           <span className="hero-tag">AI Predictive ML Model</span>
-          <span style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+          <span style={{ fontSize: '0.84rem', color: '#043d61ff' }}>
             Airport Weather & Turnaround Intelligence
           </span>
         </div>
-        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Flight Delay Prediction & Risk Analytics</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <h1 style={{ fontSize: '2rem',color:'#043d61ff', fontWeight: 800 }}>Flight Delay Prediction & Risk Analytics</h1>
+        <p style={{ color: '#043d61ff', fontSize: '0.9rem' }}>
           Predictive machine learning algorithms analyzing Doppler weather radar, inbound aircraft turnaround, and runway congestion.
         </p>
       </div>
@@ -57,7 +57,7 @@ export const DelayPrediction = () => {
             value={selectedFlightCode}
             onChange={(e) => setSelectedFlightCode(e.target.value)}
             className="form-input"
-            style={{ padding: '8px 14px', background: 'rgba(5, 11, 24, 0.6)', width: 'auto', minWidth: '220px' }}
+            style={{ padding: '8px 14px', background: 'rgba(118, 200, 237, 0.94)94)', width: 'auto', minWidth: '220px' }}
           >
             {flights.map((f) => (
               <option key={f.id} value={f.flightNumber}>

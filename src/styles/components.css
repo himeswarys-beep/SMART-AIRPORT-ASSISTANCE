@@ -1485,19 +1485,26 @@
   border: 1px solid #d0e1f3;
   border-radius: var(--radius-md);
   padding: 11px 14px 11px 42px;
-  color: var(--text-primary);
+  color: #0f172a;
   font-size: 0.9rem;
   transition: all var(--transition-normal);
+  color-scheme: light;
 }
 
 .form-input:focus {
   background: #ffffff;
   border-color: #00b4d8;
   box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.15);
+  color: #0f172a;
 }
 
 .form-input::placeholder {
   color: #94a3b8;
+}
+
+.form-input option {
+  background: #1e2a3a;
+  color: #ffffff;
 }
 
 .password-toggle-btn {

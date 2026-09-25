@@ -44,9 +44,9 @@ const SocialAuthOptions = ({ actionLabel, onGoogle, onFacebook }) => (
     </div>
     <div className="social-auth-buttons">
       <button type="button" className="social-auth-btn google" onClick={onGoogle}>
-        <GoogleIcon />
+      <br></br><GoogleIcon />
         <span>Google</span>
-      </button>
+      </button><br></br>
       <button type="button" className="social-auth-btn facebook" onClick={onFacebook}>
         <FacebookIcon />
         <span>Facebook</span>
@@ -168,7 +168,7 @@ export const Auth = () => {
       email: regEmail,
       phone: regPhone
     }));
-    addToast('Account Created Successfully!', `Welcome to Smart Airport Assistant, ${regName}`, 'success');
+    addToast('Account Created Successfully!', `Welcome to AEROVA, ${regName}`, 'success');
     navigate('/language');
   };
 
@@ -180,7 +180,7 @@ export const Auth = () => {
           <div className="auth-header">
             <img src={ASSETS.logo} alt="Smart Airport Logo" className="auth-brand-logo" />
             <h2 className="auth-title gradient-text-sky">
-              Smart Airport Assistant
+              AEROVA
             </h2>
             <p className="auth-tagline">
               {isRegisterMode
@@ -309,20 +309,7 @@ export const Auth = () => {
                 onFacebook={() => handleSocialAuth('facebook')}
               />
 
-              {/* 1-Click Demo Login helper */}
-              <div className="demo-login-shortcut">
-                <div className="demo-text">
-                  <span style={{ fontWeight: 700, color: 'var(--accent-peach)' }}>⚡ Quick Demo: </span>
-                  Sample passenger Arun Kumar (MAA ✈ BLR)
-                </div>
-                <button
-                  type="button"
-                  className="demo-btn"
-                  onClick={handleQuickDemoLogin}
-                >
-                  1-Click Login
-                </button>
-              </div>
+              
             </form>
           ) : (
             /* REGISTRATION FORM */
@@ -427,7 +414,7 @@ export const Auth = () => {
 
               <SocialAuthOptions
                 actionLabel="sign up"
-                onGoogle={() => handleSocialAuth('google')}
+                onGoogle={() => handleSocialAuth('google')} 
                 onFacebook={() => handleSocialAuth('facebook')}
               />
             </form>

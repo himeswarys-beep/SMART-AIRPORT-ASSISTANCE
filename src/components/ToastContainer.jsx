@@ -10,14 +10,14 @@ export const ToastContainer = () => {
   return (
     <div className="toast-container">
       {toasts.map((t) => {
-        let icon = <Info size={20} color="var(--sky-blue)" />;
+        let icon = <Info size={20} color="black" />;
         let statusClass = '';
 
         if (t.type === 'success') {
-          icon = <CheckCircle2 size={20} color="var(--status-on-time)" />;
+          icon = <CheckCircle2 size={20} color="black" />;
           statusClass = 'toast-success';
         } else if (t.type === 'warning') {
-          icon = <AlertCircle size={20} color="var(--accent-peach-bright)" />;
+          icon = <AlertCircle size={20} color="black" />;
           statusClass = 'toast-warning';
         }
 

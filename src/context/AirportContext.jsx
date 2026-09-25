@@ -8,12 +8,30 @@ import {
   generateAssistanceBookingsForAirport,
   generateBaggageStatusForAirport
 } from '../utils/airportMockData';
+import { supabase } from '../lib/supabase';
 
 const AirportContext = createContext();
 
 export const AirportProvider = ({ children }) => {
   // Language State ('en' | 'ta')
   const [language, setLanguage] = useState('en');
+
+  // Theme State ('light' | 'dark')
+  const [theme, setTheme] = useState(() => {
+    try {
+      const savedTheme = localStorage.getItem('smart_airport_theme');
+      return savedTheme || 'light';
+    } catch (e) {
+      return 'light';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('smart_airport_theme', theme);
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {}
+  }, [theme]);
 
   // Passport Details State
   const [passportDetails, setPassportDetails] = useState({
@@ -377,26 +395,65 @@ export const AirportProvider = ({ children }) => {
     return generateAssistanceBookingsForAirport(ap.code);
   });
 
-  // Effect to regenerate mock data when activeAirport changes
+  // Effect to fetch live data from Supabase or fallback to mock data when activeAirport changes
   useEffect(() => {
     if (!activeAirport) return;
     const { code, city, id } = activeAirport;
 
-    const mockFlights = generateFlightsForAirport(code, city);
-    setFlights(mockFlights);
-    setQueueMetrics(generateQueueMetricsForAirport(code));
-    setDelayPrediction(generateDelayPredictionForAirport(code, mockFlights));
-    setAssistanceBookings(generateAssistanceBookingsForAirport(code));
-    setBaggageStatus(generateBaggageStatusForAirport(code));
+    const fetchAirportData = async () => {
+      const mockFlights = generateFlightsForAirport(code, city);
+      setFlights(mockFlights);
+      
+      try {
+        // 1. Fetch Delay Prediction from Supabase
+        const { data: delayData, error: delayError } = await supabase
+          .from('delay_predictions')
+          .select('*')
+          .eq('airport_code', code)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
 
-    const mapData = getAirportData(id);
-    if (mapData && mapData.locations) {
-      const standardPOIs = normalizeMapLocations(mapData.locations);
-      setNavigationPOIs(standardPOIs);
-      if (standardPOIs.length > 0) {
-        setActiveDestination(standardPOIs[0]);
+        if (delayData && !delayError) {
+          setDelayPrediction(delayData.prediction_data);
+        } else {
+          setDelayPrediction(generateDelayPredictionForAirport(code, mockFlights));
+        }
+
+        // 2. Fetch Queue and Crowd Metrics from Supabase
+        const { data: queueData, error: queueError } = await supabase
+          .from('queue_metrics')
+          .select('*')
+          .eq('airport_code', code)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (queueData && !queueError) {
+          setQueueMetrics(queueData.metrics_data);
+        } else {
+          setQueueMetrics(generateQueueMetricsForAirport(code));
+        }
+      } catch (err) {
+        console.error('Supabase fetch error:', err);
+        setDelayPrediction(generateDelayPredictionForAirport(code, mockFlights));
+        setQueueMetrics(generateQueueMetricsForAirport(code));
       }
-    }
+
+      setAssistanceBookings(generateAssistanceBookingsForAirport(code));
+      setBaggageStatus(generateBaggageStatusForAirport(code));
+
+      const mapData = getAirportData(id);
+      if (mapData && mapData.locations) {
+        const standardPOIs = normalizeMapLocations(mapData.locations);
+        setNavigationPOIs(standardPOIs);
+        if (standardPOIs.length > 0) {
+          setActiveDestination(standardPOIs[0]);
+        }
+      }
+    };
+
+    fetchAirportData();
   }, [activeAirport]);
 
   const bookSpecialAssistance = (bookingData) => {
@@ -537,6 +594,8 @@ export const AirportProvider = ({ children }) => {
   return (
     <AirportContext.Provider
       value={{
+        theme,
+        setTheme,
         language,
         setLanguage,
         passportDetails,

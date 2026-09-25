@@ -11,7 +11,7 @@ export const Splash = () => {
   useEffect(() => {
     // Fast 800ms timer for progress bar and navigation
     const startTime = Date.now();
-    const duration = 800;
+    const duration = 3000;
 
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
@@ -149,7 +149,7 @@ export const Splash = () => {
           }}
           className="gradient-text-sky"
         >
-          Smart Airport Assistant
+          AEROVA
         </h1>
 
         {/* Tagline */}

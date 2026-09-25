@@ -12,14 +12,16 @@ import {
   LogOut,
   CheckCircle,
   Compass,
-  Globe
+  Globe,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useAirport } from '../context/AirportContext';
 import { airportsList } from '../data/airports';
 import { ASSETS } from '../assets/images';
 
 export const Navbar = ({ onOpenNotifications }) => {
-  const { user, activeBooking, clearActiveBooking, activeAirport, setActiveAirport, notifications, isLoggedIn, setIsLoggedIn, language, setLanguage } = useAirport();
+  const { user, activeBooking, clearActiveBooking, activeAirport, setActiveAirport, notifications, isLoggedIn, setIsLoggedIn, language, setLanguage, theme, setTheme } = useAirport();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAirportDropdown, setShowAirportDropdown] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -62,7 +64,7 @@ export const Navbar = ({ onOpenNotifications }) => {
             Aerova
           </span>
           <span className="brand-subtitle" style={{ fontSize: '0.7rem', color: '#0284c7', fontWeight: 700, letterSpacing: '0.04em' }}>
-            Your Journey, Our Priority
+            WE ASSIST YOU EVERY STEP
           </span>
         </div>
       </Link>
@@ -92,6 +94,29 @@ export const Navbar = ({ onOpenNotifications }) => {
 
       {/* Right Navigation Actions */}
       <div className="navbar-actions">
+        {/* Theme Toggle Button */}
+        <button
+          type="button"
+          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            background: 'rgba(0, 180, 216, 0.1)',
+            border: '1px solid rgba(0, 180, 216, 0.25)',
+            color: 'var(--cyan-dark)',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            marginRight: '8px'
+          }}
+          title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+        >
+          {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+        </button>
+
         {/* Quick Language Toggle Button */}
         <button
           type="button"
@@ -223,7 +248,7 @@ export const Navbar = ({ onOpenNotifications }) => {
               {user.name.charAt(0)}
             </div>
             <div className="user-info">
-              <span className="user-name">{user.name}</span>
+              <span className="user-name"style={{color: 'black'}}>{user.name}</span>
               <span className="user-seat-tag">
                 {user.flightNumber ? `Seat ${user.seat} • ${user.flightNumber}` : 'Passenger Profile'}
               </span>

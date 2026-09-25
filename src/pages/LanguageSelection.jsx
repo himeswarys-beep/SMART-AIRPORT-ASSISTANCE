@@ -76,7 +76,7 @@ export const LanguageSelection = () => {
                 padding: '24px',
                 borderRadius: '16px',
                 background: language === 'en' 
-                  ? 'linear-gradient(135deg, rgba(37, 99, 235, 0.25), rgba(16, 185, 129, 0.15))' 
+                  ? 'linear-gradient(135deg, rgba(12, 39, 96, 0.25), rgba(16, 185, 129, 0.15))' 
                   : 'rgba(16, 33, 71, 0.4)',
                 border: language === 'en' 
                   ? '2px solid var(--sky-blue)' 
@@ -184,7 +184,7 @@ export const LanguageSelection = () => {
                     height: '24px',
                     borderRadius: '50%',
                     background: 'var(--accent-peach-bright)',
-                    color: '#050b18',
+                    color: '#133682ff',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center'

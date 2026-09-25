@@ -82,12 +82,12 @@ export const SeatSwap = () => {
           <span className="hero-tag" style={{ background: 'rgba(251, 146, 60, 0.2)', color: 'var(--accent-peach-bright)' }}>
             Peer-to-Peer Seat Exchange
           </span>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+          <span style={{ fontSize: '0.85rem', color: '#043d61ff' }}>
             Flight {activeTrip.flightNumber} ({activeTrip.from} ➔ {activeTrip.to})
           </span>
         </div>
-        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Seat Swap Platform</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <h1 style={{ fontSize: '2rem',color:'#043d61ff', fontWeight: 800 }}>Seat Swap Platform</h1>
+        <p style={{ color: '#043d61ff', fontSize: '0.9rem' }}>
           Request seat swaps directly with fellow passengers on your booked flight for better comfort, extra legroom, or family seating.
         </p>
       </div>

@@ -54,12 +54,12 @@ export const BaggageTracker = () => {
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
           <span className="hero-tag">RFID Telemetry</span>
-          <span style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+          <span style={{ fontSize: '0.84rem', color: '#043d61ff' }}>
             Real-time Baggage Handling System (BHS)
           </span>
         </div>
-        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Smart Baggage & Lost Luggage Tracker</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <h1 style={{ fontSize: '2rem',color:'#043d61ff', fontWeight: 800 }}>Smart Baggage & Lost Luggage Tracker</h1>
+        <p style={{ color: '#043d61ff', fontSize: '0.9rem' }}>
           Continuous RFID sensor tracking across check-in, X-ray scanning, apron transit, aircraft hold loading, and carousel delivery.
         </p>
       </div>
@@ -83,7 +83,7 @@ export const BaggageTracker = () => {
             <input
               type="text"
               className="navbar-search-input"
-              style={{ background: 'rgba(5, 11, 24, 0.6)', paddingLeft: '42px' }}
+              style={{ background: '#ffffffe5', paddingLeft: '42px' }}
               placeholder="Enter Baggage Tag (e.g. TAG-6E-99214)..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}

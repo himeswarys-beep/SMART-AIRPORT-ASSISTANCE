@@ -91,12 +91,12 @@ export const SpecialAssistance = () => {
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
           <span className="hero-tag">Inclusive Airport Services</span>
-          <span style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+          <span style={{ fontSize: '0.84rem', color: '#043d61ff' }}>
             24/7 Dedicated Care Team
           </span>
         </div>
-        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Special Assistance & Accessibility Booking</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <h1 style={{ fontSize: '2rem',color:'#043d61ff', fontWeight: 800 }}>Special Assistance & Accessibility Booking</h1>
+        <p style={{ color: '#043d61ff', fontSize: '0.9rem' }}>
           Book complimentary terminal wheelchair escorts, medical support, and senior citizen assistance for a smooth, accessible journey.
         </p>
       </div>
@@ -120,7 +120,7 @@ export const SpecialAssistance = () => {
                 value={serviceType}
                 onChange={(e) => setServiceType(e.target.value)}
                 className="form-input"
-                style={{ padding: '12px 14px', background: 'rgba(5, 11, 24, 0.6)' }}
+                style={{ padding: '12px 14px', background: 'rgba(5, 11, 24, 0.6)', color: '#ffffff' }}
                 required
               >
                 {services.map((s) => (
@@ -132,7 +132,7 @@ export const SpecialAssistance = () => {
             </div>
 
             {/* Passenger Name & Phone */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+            <div style={{ display: 'grid',textcolor: 'black', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div className="form-group">
                 <label className="form-label">Passenger Name</label>
                 <input
@@ -188,7 +188,7 @@ export const SpecialAssistance = () => {
                 value={pickupPoint}
                 onChange={(e) => setPickupPoint(e.target.value)}
                 className="form-input"
-                style={{ padding: '12px 14px', background: 'rgba(5, 11, 24, 0.6)' }}
+                style={{ padding: '12px 14px', background: 'rgba(5, 11, 24, 0.6)', color: '#ffffff' }}
                 required
               >
                 <option value="Departure Gate 3 Drop-Off Zone">Departure Gate 3 Drop-Off Zone (Ramp)</option>
@@ -203,7 +203,7 @@ export const SpecialAssistance = () => {
               <label className="form-label">Special Notes / Medical Requirements (Optional)</label>
               <textarea
                 className="form-input"
-                style={{ minHeight: '80px', resize: 'vertical' }}
+                style={{ minHeight: '80px', resize: 'vertical', background: 'rgba(5,11,24,0.6)', color: '#ffffff', padding: '12px 14px' }}
                 placeholder="Mention any specific mobility constraints, portable oxygen requirements, or attendant details..."
                 value={specialNotes}
                 onChange={(e) => setSpecialNotes(e.target.value)}

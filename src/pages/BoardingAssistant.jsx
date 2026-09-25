@@ -89,12 +89,12 @@ export const BoardingAssistant = () => {
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
           <span className="hero-tag">Smart Pass</span>
-          <span style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+          <span style={{ fontSize: '0.84rem', color: '#043d61ff' }}>
             Flight {bk.flightNumber} • {bk.airline}
           </span>
         </div>
-        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Smart Boarding Assistant</h1>
-        <p style={{ color: 'black', fontSize: '0.9rem' }}>
+        <h1 style={{ fontSize: '2rem',color:'#043d61ff', fontWeight: 800 }}>Smart Boarding Assistant</h1>
+        <p style={{ color: '#043d61ff', fontSize: '0.9rem' }}>
           Live electronic boarding pass, countdown timer, priority gate navigation, and automated boarding alerts.
         </p>
       </div>
@@ -133,7 +133,7 @@ export const BoardingAssistant = () => {
               <div style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.95rem' }}>
                 Operational Gate: Gate {bk.gate}
               </div>
-              <div style={{ fontSize: '0.82rem', color: 'black' }}>
+              <div style={{ fontSize: '0.82rem', color: '#043d61ff' }}>
                 Flight {bk.flightNumber} assigned to {bk.fromTerminal || 'Terminal 2'}. Boarding at Gate {bk.gate}.
               </div>
             </div>
