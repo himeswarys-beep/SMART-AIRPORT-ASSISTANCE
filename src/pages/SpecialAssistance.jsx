@@ -22,8 +22,8 @@ export const SpecialAssistance = () => {
 
   // Booking Form State
   const [serviceType, setServiceType] = useState('Wheelchair Assistance (Ramp & Cabin)');
-  const [passengerName, setPassengerName] = useState(user.name);
-  const [flightNumber, setFlightNumber] = useState(user.flightNumber);
+  const [passengerName, setPassengerName] = useState(user?.name || '');
+  const [flightNumber, setFlightNumber] = useState(user?.flightNumber || '');
   const [bookingDate, setBookingDate] = useState('2026-09-01');
   const [pickupPoint, setPickupPoint] = useState('Departure Gate 3 Drop-Off Zone');
   const [specialNotes, setSpecialNotes] = useState('');

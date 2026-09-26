@@ -64,7 +64,7 @@ export const MealOrder = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
           <span className="hero-tag">Galley Kitchen Pre-Order</span>
           <span style={{ fontSize: '0.84rem', color: '#043d61ff' }}>
-            Seat {user.seat} • Flight {user.flightNumber}
+            Seat {user?.seat || 'Assigned'} • Flight {user?.flightNumber || 'Selected'}
           </span>
         </div>
         <h1 style={{ fontSize: '2rem',color:'#043d61ff', fontWeight: 800 }}>In-Flight  Meal Pre-Order</h1>
@@ -267,7 +267,7 @@ export const MealOrder = () => {
             >
               <Plane size={16} color="var(--accent-peach)" />
               <div style={{ fontSize: '0.8rem', color: 'var(--text-primary)' }}>
-                Direct Galley Delivery to <strong style={{ color: '#ffffff' }}>Seat {user.seat}</strong> (Flight {user.flightNumber})
+                Direct Galley Delivery to <strong style={{ color: '#ffffff' }}>Seat {user?.seat || 'Assigned'}</strong> (Flight {user?.flightNumber || 'Selected'})
               </div>
             </div>
 

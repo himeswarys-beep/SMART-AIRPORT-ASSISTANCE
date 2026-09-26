@@ -47,13 +47,13 @@ export const FlightBooking = () => {
   // Passenger Details State: Array of passenger objects
   const [passengerDetails, setPassengerDetails] = useState([
     {
-      fullName: user.name || 'Arun Kumar',
-      dob: user.dob || '1992-05-14',
-      gender: user.gender || 'Male',
-      mobile: user.phone || '+91 98401 23456',
-      email: user.email || 'arun.kumar@gmail.com',
+      fullName: user?.name || 'Arun Kumar',
+      dob: user?.dob || '1992-05-14',
+      gender: user?.gender || 'Male',
+      mobile: user?.phone || '+91 98401 23456',
+      email: user?.email || 'arun.kumar@gmail.com',
       idType: 'Passport',
-      idNumber: user.passportNumber || 'Z8941029'
+      idNumber: user?.passportNumber || 'Z8941029'
     }
   ]);
 
@@ -83,13 +83,13 @@ export const FlightBooking = () => {
     const initialPassengers = Array.from({ length: totalCount }, (_, i) => {
       if (i === 0) {
         return {
-          fullName: user.name || 'Arun Kumar',
-          dob: user.dob || '1992-05-14',
-          gender: user.gender || 'Male',
-          mobile: user.phone || '+91 98401 23456',
-          email: user.email || 'arun.kumar@gmail.com',
+          fullName: user?.name || 'Arun Kumar',
+          dob: user?.dob || '1992-05-14',
+          gender: user?.gender || 'Male',
+          mobile: user?.phone || '+91 98401 23456',
+          email: user?.email || 'arun.kumar@gmail.com',
           idType: 'Passport',
-          idNumber: user.passportNumber || 'Z8941029'
+          idNumber: user?.passportNumber || 'Z8941029'
         };
       }
       return {

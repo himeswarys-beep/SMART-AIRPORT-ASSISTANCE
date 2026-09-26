@@ -1568,3 +1568,151 @@
   font-weight: 700;
   border: none;
 }
+
+/* ==========================================================================
+   GLOBAL RESPONSIVE DESIGN - DESKTOP, TABLET & MOBILE VIEWPORTS
+   ========================================================================== */
+
+/* Global container overflow fixes */
+html, body, #root, .app-container {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Tablet & Mobile Navigation adjustments */
+@media (max-width: 1023px) {
+  .sidebar-wrapper {
+    display: none !important;
+  }
+
+  .main-content {
+    padding: 20px 16px 84px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* Mobile Screens (<= 768px) */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 14px 10px 84px !important;
+  }
+
+  /* Navbar responsive scaling */
+  .navbar-wrapper {
+    padding: 0 10px !important;
+    gap: 8px !important;
+  }
+
+  .navbar-brand-title {
+    font-size: 1.25rem !important;
+  }
+
+  .header-reference-tagline {
+    display: none !important;
+  }
+
+  .terminal-badge span {
+    display: none !important;
+  }
+
+  /* Hero & Flight Card responsiveness */
+  .dashboard-hero {
+    padding: 16px 12px !important;
+    border-radius: var(--radius-lg) !important;
+    gap: 14px !important;
+  }
+
+  .hero-bg-banner {
+    display: none !important;
+  }
+
+  .hero-flight-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    padding: 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .flight-route-flow {
+    width: 100% !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+
+  .flight-point .city-code {
+    font-size: 1.35rem !important;
+  }
+
+  .flight-track-line {
+    min-width: 70px !important;
+  }
+
+  .hero-flight-metrics {
+    width: 100% !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+
+  .metric-pill {
+    flex: 1 1 calc(50% - 6px) !important;
+    min-width: 110px !important;
+    padding: 6px 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Stat cards & module grids */
+  .stat-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .modules-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .dashboard-body-layout {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Form & Auth Box scaling */
+  .auth-card-container {
+    max-width: 100% !important;
+    padding: 0 4px !important;
+  }
+
+  .auth-glass-box {
+    padding: 22px 14px !important;
+    border-radius: var(--radius-lg) !important;
+  }
+}
+
+/* Extra Small Mobile Screens (<= 480px) */
+@media (max-width: 480px) {
+  .user-info {
+    display: none !important;
+  }
+
+  .user-profile-pill {
+    padding: 4px 6px !important;
+  }
+
+  .metric-pill {
+    flex: 1 1 100% !important;
+  }
+
+  .hero-title {
+    font-size: 1.35rem !important;
+  }
+
+  .hero-subtitle {
+    font-size: 0.84rem !important;
+  }
+}

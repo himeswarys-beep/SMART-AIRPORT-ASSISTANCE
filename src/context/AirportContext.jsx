@@ -9,6 +9,7 @@ import {
   generateBaggageStatusForAirport
 } from '../utils/airportMockData';
 import { supabase } from '../lib/supabase';
+import { useAuth } from './AuthContext';
 
 const AirportContext = createContext();
 
@@ -46,16 +47,40 @@ export const AirportProvider = ({ children }) => {
   });
 
   // Active Booking State (persisted in localStorage)
-  const [activeBooking, setActiveBooking] = useState(() => {
+  const [activeBooking, setActiveBooking] = useState(null);
+
+  // Expire active booking if flight journey has passed
+  useEffect(() => {
+    if (!activeBooking) return;
     try {
-      const saved = localStorage.getItem('smart_airport_active_booking');
-      if (saved) return JSON.parse(saved);
-    } catch (e) {}
-    return null;
-  });
+      const today = new Date();
+      if (!activeBooking.departureDate) return;
+      
+      const [hours, minutes] = (activeBooking.depTime || '00:00').split(':');
+      const flightDate = new Date(activeBooking.departureDate);
+      flightDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+      // If current time is 6 hours past departure time, consider it completed/expired
+      const expiryTime = new Date(flightDate.getTime() + 6 * 60 * 60 * 1000);
+      
+      if (today > expiryTime) {
+        setActiveBooking(null);
+        localStorage.removeItem('smart_airport_active_booking');
+        
+        // Also update myTrips to mark it as completed
+        setMyTrips(prev => prev.map(trip => 
+          trip.id === activeBooking.id ? { ...trip, status: 'Completed' } : trip
+        ));
+      }
+    } catch (e) {
+      console.error('Error checking booking expiration', e);
+    }
+  }, [activeBooking]);
+
+  const { user: authUser, logout } = useAuth();
 
   // 1. Current Passenger & Authentication State
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(() => {
     const baseUser = {
       name: 'Arun Kumar',
@@ -69,35 +94,71 @@ export const AirportProvider = ({ children }) => {
       passportCountry: 'India'
     };
 
-    try {
-      const saved = localStorage.getItem('smart_airport_active_booking');
-      if (saved) {
-        const bk = JSON.parse(saved);
-        return {
-          ...baseUser,
-          pnr: bk.pnr,
-          flightNumber: bk.flightNumber,
-          airline: bk.airline,
-          airlineCode: bk.airlineCode || '6E',
-          from: bk.from,
-          fromCity: bk.fromCity,
-          fromTerminal: bk.fromTerminal,
-          to: bk.to,
-          toCity: bk.toCity,
-          toTerminal: bk.toTerminal,
-          departureTime: bk.depTime,
-          boardingTime: bk.depTime,
-          departureDate: bk.departureDate,
-          gate: bk.gate || 'A12',
-          seat: bk.seatsAssigned?.[0] || bk.seat || '12A',
-          baggageTag: bk.baggageTag || `TAG-${bk.airlineCode || '6E'}-99214`,
-          barcode: bk.barcode || `M1${(bk.passengers?.[0]?.fullName || baseUser.name).toUpperCase().replace(/\s+/g, '/')} E${bk.pnr} ${bk.from}${bk.to}${bk.airlineCode || '6E'} ${bk.flightNumber?.replace(/\s+/g, '') || ''}`
-        };
-      }
-    } catch (e) {}
-
     return baseUser;
   });
+
+  // Sync with AuthUser
+  useEffect(() => {
+    if (authUser) {
+      setIsLoggedIn(true);
+      const metadata = authUser.user_metadata || {};
+      const savedPassport = metadata.passportDetails || {};
+      if (metadata.passportDetails) {
+        setPassportDetails(metadata.passportDetails);
+      }
+
+      const baseUser = {
+        name: metadata.full_name || authUser.email.split('@')[0],
+        email: authUser.email,
+        phone: metadata.phone || savedPassport.contactNumber || '+91 98401 23456',
+        id: authUser.id,
+        passportNumber: savedPassport.passportNumber || 'Z9840123',
+        dob: savedPassport.dob || '1994-08-15',
+        gender: savedPassport.gender || 'Male',
+        nationality: savedPassport.nationality || 'Indian',
+        passportExpiry: savedPassport.passportExpiry || '2032-11-20',
+        passportCountry: savedPassport.passportCountry || 'India'
+      };
+
+      try {
+        const saved = localStorage.getItem('smart_airport_active_booking');
+        if (saved) {
+          const bk = JSON.parse(saved);
+          if (bk.userId === authUser.id) {
+            setActiveBooking(bk);
+            setUser({
+              ...baseUser,
+              pnr: bk.pnr,
+              flightNumber: bk.flightNumber,
+              airline: bk.airline,
+              airlineCode: bk.airlineCode || '6E',
+              from: bk.from,
+              fromCity: bk.fromCity,
+              fromTerminal: bk.fromTerminal,
+              to: bk.to,
+              toCity: bk.toCity,
+              toTerminal: bk.toTerminal,
+              departureTime: bk.depTime,
+              boardingTime: bk.depTime,
+              departureDate: bk.departureDate,
+              gate: bk.gate || 'A12',
+              seat: bk.seatsAssigned?.[0] || bk.seat || '12A',
+              baggageTag: bk.baggageTag || `TAG-${bk.airlineCode || '6E'}-99214`,
+              barcode: bk.barcode || `M1${baseUser.name.toUpperCase().replace(/\s+/g, '/')} E${bk.pnr} ${bk.from}${bk.to}${bk.airlineCode || '6E'} ${bk.flightNumber?.replace(/\s+/g, '') || ''}`
+            });
+            return;
+          }
+        }
+      } catch (e) {}
+
+      setActiveBooking(null);
+      setUser(baseUser);
+    } else {
+      setIsLoggedIn(false);
+      setUser(null);
+      setActiveBooking(null);
+    }
+  }, [authUser]);
 
   // Active Terminal Filter
   const [activeAirport, setActiveAirport] = useState(() => {
@@ -364,16 +425,16 @@ export const AirportProvider = ({ children }) => {
     const orderData = {
       orderId: `ORD-${Math.floor(100000 + Math.random() * 900000)}`,
       items: [...mealCart],
-      flight: user.flightNumber,
-      seat: user.seat,
-      passenger: user.name,
+      flight: user?.flightNumber || '6E 204',
+      seat: user?.seat || '12A',
+      passenger: user?.name || 'Passenger',
       totalAmount: mealCart.reduce((acc, curr) => acc + curr.price * curr.qty, 0),
       status: 'Confirmed & Sent to Galley',
       timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
     };
     setConfirmedMealOrder(orderData);
     setMealCart([]);
-    addToast('Order Placed Successfully!', `Will be served to Seat ${user.seat} during flight`, 'success');
+    addToast('Order Placed Successfully!', `Will be served to Seat ${user?.seat || '12A'} during flight`, 'success');
   };
 
   // 8. Flight Delay Prediction Analytics Model State
@@ -492,27 +553,40 @@ export const AirportProvider = ({ children }) => {
   }, []);
 
   // 11. My Trips & Flight Booking State with localStorage persistence
-  const [myTrips, setMyTrips] = useState(() => {
+  const [myTrips, setMyTrips] = useState([]);
+
+  useEffect(() => {
+    if (!authUser) {
+      setMyTrips([]);
+      return;
+    }
     try {
       const saved = localStorage.getItem('smart_airport_my_trips');
       if (saved) {
-        return JSON.parse(saved);
+        const trips = JSON.parse(saved);
+        setMyTrips(trips.filter(t => t.userId === authUser.id));
       }
     } catch (e) {
       console.error('Error loading saved trips', e);
     }
-    return [];
-  });
+  }, [authUser]);
 
   useEffect(() => {
+    if (!authUser) return;
     try {
-      localStorage.setItem('smart_airport_my_trips', JSON.stringify(myTrips));
+      // Load existing trips first so we don't overwrite other users' trips, just update them all
+      const saved = localStorage.getItem('smart_airport_my_trips');
+      let allTrips = saved ? JSON.parse(saved) : [];
+      // Remove current user's old trips and append new ones
+      allTrips = allTrips.filter(t => t.userId !== authUser.id).concat(myTrips);
+      localStorage.setItem('smart_airport_my_trips', JSON.stringify(allTrips));
     } catch (e) {
       console.error('Error saving trips to localStorage', e);
     }
-  }, [myTrips]);
+  }, [myTrips, authUser]);
 
-  const addBooking = (newBooking) => {
+  const addBooking = (bookingData) => {
+    const newBooking = { ...bookingData, userId: authUser?.id };
     setMyTrips((prev) => [newBooking, ...prev]);
 
     // Persist as the active booking in localStorage

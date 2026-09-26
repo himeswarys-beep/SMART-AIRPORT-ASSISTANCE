@@ -32,9 +32,12 @@ export const AIChatbox = () => {
 
   // Initialize initial greeting message based on language
   useEffect(() => {
+    const userName = user?.name || 'Passenger';
+    const userGate = user?.gate || 'A12';
+    
     const greetingText = language === 'ta'
-      ? `வணக்கம் ${user.name}! நான் உங்கள் ஸ்மார்ட் ஏர்போர்ட் AI உதவியாளர். உங்கள் விமானம் 6E 204 (கேட் ${user.gate}) அல்லது சாமான்கள், பாதுகாப்பு சோதனைகள் பற்றிய எந்த கேள்வியையும் கேட்கலாம்!`
-      : `Hello ${user.name}! I am your Smart Airport AI Assistant. Ask me anything about your flight 6E 204 (Gate ${user.gate}), baggage, DigiYatra, or terminal services!`;
+      ? `வணக்கம் ${userName}! நான் உங்கள் ஸ்மார்ட் ஏர்போர்ட் AI உதவியாளர். உங்கள் விமானம் 6E 204 (கேட் ${userGate}) அல்லது சாமான்கள், பாதுகாப்பு சோதனைகள் பற்றிய எந்த கேள்வியையும் கேட்கலாம்!`
+      : `Hello ${userName}! I am your Smart Airport AI Assistant. Ask me anything about your flight 6E 204 (Gate ${userGate}), baggage, DigiYatra, or terminal services!`;
 
     setMessages([
       {
@@ -44,7 +47,7 @@ export const AIChatbox = () => {
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }
     ]);
-  }, [language, user.name, user.gate]);
+  }, [language, user?.name, user?.gate]);
 
   // Scroll to bottom of chat
   useEffect(() => {
@@ -134,18 +137,18 @@ export const AIChatbox = () => {
     // Dynamic Context-aware fallbacks
     if (qLower.includes('name') || qLower.includes('who') || qLower.includes('பெயர்')) {
       return language === 'ta'
-        ? `உங்கள் பெயர் ${user.name}. உங்கள் PNR எண்: ${user.pnr}.`
-        : `Your name is ${user.name}. PNR: ${user.pnr}.`;
+        ? `உங்கள் பெயர் ${user?.name || 'Passenger'}. உங்கள் PNR எண்: ${user?.pnr || 'N/A'}.`
+        : `Your name is ${user?.name || 'Passenger'}. PNR: ${user?.pnr || 'N/A'}.`;
     }
     if (qLower.includes('seat') || qLower.includes('இருக்கை')) {
       return language === 'ta'
-        ? `உங்கள் இருக்கை எண் ${user.seat} (${user.seatType}).`
-        : `Your assigned seat is ${user.seat} (${user.seatType}).`;
+        ? `உங்கள் இருக்கை எண் ${user?.seat || 'Unassigned'} (${user?.seatType || 'Economy'}).`
+        : `Your assigned seat is ${user?.seat || 'Unassigned'} (${user?.seatType || 'Economy'}).`;
     }
     if (qLower.includes('passport') || qLower.includes('பாஸ்போர்ட்')) {
       return language === 'ta'
-        ? `உங்கள் பாஸ்போர்ட் எண்: ${user.passportNumber || 'Z8941029'}. சரிபார்க்கப்பட்டது.`
-        : `Your verified passport number is ${user.passportNumber || 'Z8941029'}.`;
+        ? `உங்கள் பாஸ்போர்ட் எண்: ${user?.passportNumber || 'Not verified'}.`
+        : `Your verified passport number is ${user?.passportNumber || 'Not verified'}.`;
     }
 
     // Default fallback

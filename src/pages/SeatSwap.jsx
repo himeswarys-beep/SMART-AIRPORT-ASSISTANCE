@@ -7,12 +7,12 @@ export const SeatSwap = () => {
 
   // Active user trip
   const activeTrip = myTrips[0] || {
-    flightNumber: user.flightNumber,
-    airline: user.airline,
-    from: user.from,
-    to: user.to,
-    seat: user.seat,
-    pnr: user.pnr
+    flightNumber: user?.flightNumber || '6E 204',
+    airline: user?.airline || 'IndiGo',
+    from: user?.from || 'MAA',
+    to: user?.to || 'DEL',
+    seat: user?.seat || '12A',
+    pnr: user?.pnr || 'PNR984'
   };
 
   // Demo Seat Swap Requests State

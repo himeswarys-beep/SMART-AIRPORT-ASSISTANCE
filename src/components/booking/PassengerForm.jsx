@@ -15,13 +15,13 @@ export const PassengerForm = ({
 
   const handleAutoFill = (index) => {
     const filled = {
-      fullName: user.name || passportDetails.fullName || 'Arun Kumar',
-      dob: user.dob || passportDetails.dob || '1992-05-14',
-      gender: user.gender || passportDetails.gender || 'Male',
-      mobile: user.phone || passportDetails.contactNumber || '+91 98401 23456',
-      email: user.email || 'arun.kumar@gmail.com',
+      fullName: user?.name || passportDetails?.fullName || 'Arun Kumar',
+      dob: user?.dob || passportDetails?.dob || '1992-05-14',
+      gender: user?.gender || passportDetails?.gender || 'Male',
+      mobile: user?.phone || passportDetails?.contactNumber || '+91 98401 23456',
+      email: user?.email || 'arun.kumar@gmail.com',
       idType: 'Passport',
-      idNumber: user.passportNumber || passportDetails.passportNumber || 'Z8941029'
+      idNumber: user?.passportNumber || passportDetails?.passportNumber || 'Z8941029'
     };
     onChangePassenger(index, filled);
     addToast('Auto-filled Saved Profile', 'Passenger details loaded from account', 'success');

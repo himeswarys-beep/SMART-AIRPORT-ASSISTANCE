@@ -9,9 +9,11 @@ import {
   EyeOff, 
   ArrowRight, 
   CheckCircle2, 
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { useAirport } from '../context/AirportContext';
+import { useAuth } from '../context/AuthContext';
 import { ASSETS } from '../assets/images';
 import { ForgotPasswordModal } from './ForgotPassword';
 
@@ -61,6 +63,7 @@ export const Auth = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [showForgotModal, setShowForgotModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Form states
   const [loginEmail, setLoginEmail] = useState('');
@@ -74,86 +77,87 @@ export const Auth = () => {
 
   const [formError, setFormError] = useState('');
 
-  const { setIsLoggedIn, setUser, addToast } = useAirport();
+  const { addToast } = useAirport();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  // Validation helpers
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const mapAuthError = (errorMessage) => {
+    const msg = errorMessage.toLowerCase();
+    if (msg.includes('invalid login credentials') || msg.includes('invalid_credentials')) {
+      return 'Incorrect email or password. Please try again.';
+    }
+    if (msg.includes('email not confirmed')) {
+      return 'Please verify your email address before logging in. Check your inbox for a confirmation link.';
+    }
+    if (msg.includes('user already registered') || msg.includes('already been registered')) {
+      return 'An account with this email already exists. Try logging in instead.';
+    }
+    if (msg.includes('password') && (msg.includes('weak') || msg.includes('short') || msg.includes('at least'))) {
+      return 'Password is too weak. Use at least 8 characters with uppercase, lowercase, and numbers.';
+    }
+    if (msg.includes('rate limit') || msg.includes('too many requests')) {
+      return 'Too many attempts. Please wait a moment and try again.';
+    }
+    if (msg.includes('network') || msg.includes('fetch')) {
+      return 'Network error. Please check your internet connection.';
+    }
+    if (msg.includes('signup is disabled')) {
+      return 'Registration is currently disabled. Please contact support.';
+    }
+    return errorMessage;
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     setFormError('');
     if (!loginEmail || !loginPassword) {
       setFormError('Please enter both your email and password.');
       return;
     }
-    setIsLoggedIn(true);
-    addToast('Welcome Back!', `Logged in as ${loginEmail.split('@')[0]}`, 'success');
-    navigate('/language');
-  };
-
-  const handleQuickDemoLogin = () => {
-    setIsLoggedIn(true);
-    setUser({
-      name: '',
-      email: '',
-      phone: '',
-      pnr: '',
-      flightNumber: ' ',
-      airline: ' ',
-      from: ' ',
-      fromCity: ' ',
-      fromTerminal: '',
-      to: '',
-      toCity: '',
-      toTerminal: '',
-      departureTime: '',
-      boardingTime: '',
-      gate: '',
-      gateOriginal: '',
-      seat: '',
-      seatType: '',
-      zone: '',
-      status: '',
-      barcode: '',
-      baggageTag: ''
-    });
-    addToast('Demo Passenger Session Started', 'Flight: 6E 204 (MAA → BLR) • Seat: 14A', 'success');
-    navigate('/language');
+    if (!validateEmail(loginEmail)) {
+      setFormError('Please enter a valid email address.');
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      const { error } = await login(loginEmail, loginPassword);
+      if (error) {
+        setFormError(mapAuthError(error.message));
+      } else {
+        addToast('Welcome Back!', `Logged in successfully`, 'success');
+        navigate('/language');
+      }
+    } catch (err) {
+      setFormError('Network error. Please check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSocialAuth = (provider) => {
-    const socialUsers = {
-      google: {
-        name: '',
-        email: '',
-        phone: ''
-      },
-      facebook: {
-        name: '',
-        email: '',
-        phone: ''
-      }
-    };
-
-    const socialUser = socialUsers[provider];
-    const action = isRegisterMode ? 'signed up' : 'signed in';
-
-    setIsLoggedIn(true);
-    setUser((prev) => ({
-      ...prev,
-      ...socialUser
-    }));
-    addToast(
-      `${provider === 'google' ? 'Google' : 'Facebook'} ${isRegisterMode ? 'Sign Up' : 'Login'} Successful`,
-      `You ${action} as ${socialUser.name}`,
-      'success'
-    );
-    navigate('/language');
+    // Keep placeholder for social auth if implemented later
+    addToast('Info', 'Social Auth not fully integrated yet', 'info');
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setFormError('');
     if (!regName || !regEmail || !regPhone || !regPassword) {
       setFormError('Please fill in all registration fields.');
+      return;
+    }
+    if (!validateEmail(regEmail)) {
+      setFormError('Please enter a valid email address.');
+      return;
+    }
+    if (regPassword.length < 8) {
+      setFormError('Password must be at least 8 characters long.');
       return;
     }
     if (regPassword !== regConfirmPassword) {
@@ -161,15 +165,26 @@ export const Auth = () => {
       return;
     }
 
-    setIsLoggedIn(true);
-    setUser((prev) => ({
-      ...prev,
-      name: regName,
-      email: regEmail,
-      phone: regPhone
-    }));
-    addToast('Account Created Successfully!', `Welcome to AEROVA, ${regName}`, 'success');
-    navigate('/language');
+    setIsLoading(true);
+    try {
+      const { data, error } = await register(regEmail, regPassword, regName, regPhone);
+
+      if (error) {
+        setFormError(mapAuthError(error.message));
+      } else {
+        // Check if email confirmation is required
+        if (data?.user?.identities?.length === 0) {
+          setFormError('An account with this email already exists. Try logging in instead.');
+        } else {
+          addToast('Account Created Successfully!', `Welcome to AEROVA, ${regName}. Please verify your email if required.`, 'success');
+          navigate('/language');
+        }
+      }
+    } catch (err) {
+      setFormError('Network error. Please check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -297,10 +312,20 @@ export const Auth = () => {
               <button
                 type="submit"
                 className="btn-primary"
-                style={{ width: '100%', padding: '13px' }}
+                style={{ width: '100%', padding: '13px', opacity: isLoading ? 0.7 : 1 }}
+                disabled={isLoading}
               >
-                <span>Sign In to Dashboard</span>
-                <ArrowRight size={17} />
+                {isLoading ? (
+                  <>
+                    <Loader2 size={17} style={{ animation: 'spin 1s linear infinite' }} />
+                    <span>Signing In...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Sign In to Dashboard</span>
+                    <ArrowRight size={17} />
+                  </>
+                )}
               </button>
 
               <SocialAuthOptions
@@ -406,10 +431,20 @@ export const Auth = () => {
               <button
                 type="submit"
                 className="btn-peach"
-                style={{ width: '100%', padding: '13px', marginTop: '10px' }}
+                style={{ width: '100%', padding: '13px', marginTop: '10px', opacity: isLoading ? 0.7 : 1 }}
+                disabled={isLoading}
               >
-                <span>Complete Digital Registration</span>
-                <CheckCircle2 size={17} />
+                {isLoading ? (
+                  <>
+                    <Loader2 size={17} style={{ animation: 'spin 1s linear infinite' }} />
+                    <span>Creating Account...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Complete Digital Registration</span>
+                    <CheckCircle2 size={17} />
+                  </>
+                )}
               </button>
 
               <SocialAuthOptions

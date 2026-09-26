@@ -17,11 +17,13 @@ import {
   Moon
 } from 'lucide-react';
 import { useAirport } from '../context/AirportContext';
+import { useAuth } from '../context/AuthContext';
 import { airportsList } from '../data/airports';
 import { ASSETS } from '../assets/images';
 
 export const Navbar = ({ onOpenNotifications }) => {
   const { user, activeBooking, clearActiveBooking, activeAirport, setActiveAirport, notifications, isLoggedIn, setIsLoggedIn, language, setLanguage, theme, setTheme } = useAirport();
+  const { logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAirportDropdown, setShowAirportDropdown] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -245,12 +247,12 @@ export const Navbar = ({ onOpenNotifications }) => {
             onClick={() => setShowUserDropdown(!showUserDropdown)}
           >
             <div className="user-avatar">
-              {user.name.charAt(0)}
+              {user?.name?.charAt(0) || '?'}
             </div>
             <div className="user-info">
-              <span className="user-name"style={{color: 'black'}}>{user.name}</span>
+              <span className="user-name"style={{color: 'black'}}>{user?.name || 'User'}</span>
               <span className="user-seat-tag">
-                {user.flightNumber ? `Seat ${user.seat} • ${user.flightNumber}` : 'Passenger Profile'}
+                {user?.flightNumber ? `Seat ${user.seat} • ${user.flightNumber}` : 'Passenger Profile'}
               </span>
             </div>
             <ChevronDown size={14} color="var(--text-muted)" />
@@ -271,10 +273,10 @@ export const Navbar = ({ onOpenNotifications }) => {
               }}
             >
               <div style={{ padding: '8px 8px 12px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '8px' }}>
-                <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{user.name}</div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{user.email}</div>
+                <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{user?.name || 'User'}</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{user?.email || ''}</div>
                 <div style={{ fontSize: '0.74rem', color: 'var(--cyan-dark)', marginTop: '4px', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
-                  {user.pnr ? `PNR: ${user.pnr} | Flight ${user.flightNumber}` : 'No Active Flight Booked'}
+                  {user?.pnr ? `PNR: ${user.pnr} | Flight ${user.flightNumber}` : 'No Active Flight Booked'}
                 </div>
               </div>
 
@@ -311,7 +313,7 @@ export const Navbar = ({ onOpenNotifications }) => {
                 }}
               >
                 <Compass size={16} color="var(--cyan-dark)" />
-                <span>{user.gate ? `Navigate to Gate ${user.gate}` : 'Airport Navigation'}</span>
+                <span>{user?.gate ? `Navigate to Gate ${user.gate}` : 'Airport Navigation'}</span>
               </Link>
 
               {activeBooking && (
@@ -339,9 +341,9 @@ export const Navbar = ({ onOpenNotifications }) => {
               )}
 
               <div
-                onClick={() => {
+                onClick={async () => {
                   setShowUserDropdown(false);
-                  setIsLoggedIn(false);
+                  await logout();
                   navigate('/auth');
                 }}
                 style={{

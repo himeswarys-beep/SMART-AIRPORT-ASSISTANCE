@@ -1,24 +1,59 @@
 import React, { useState } from 'react';
-import { Mail, ArrowLeft, Send, CheckCircle2, X } from 'lucide-react';
+import { Mail, ArrowLeft, Send, CheckCircle2, X, Loader2, AlertCircle } from 'lucide-react';
 import { useAirport } from '../context/AirportContext';
+import { useAuth } from '../context/AuthContext';
 
 export const ForgotPasswordModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [isSent, setIsSent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const { addToast } = useAirport();
+  const { resetPassword } = useAuth();
 
   if (!isOpen) return null;
 
-  const handleSendReset = (e) => {
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const handleSendReset = async (e) => {
     e.preventDefault();
-    if (!email) return;
-    setIsSent(true);
-    addToast('Reset Link Dispatched', `Check instructions sent to ${email}`, 'success');
+    setError('');
+
+    if (!email) {
+      setError('Please enter your email address.');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error: resetError } = await resetPassword(email);
+
+      if (resetError) {
+        setError(resetError.message);
+      } else {
+        setIsSent(true);
+        addToast('Reset Link Dispatched', `Check instructions sent to ${email}`, 'success');
+      }
+    } catch (err) {
+      setError('Network error. Please check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleClose = () => {
     setIsSent(false);
     setEmail('');
+    setError('');
+    setIsLoading(false);
     onClose();
   };
 
@@ -97,6 +132,26 @@ export const ForgotPasswordModal = ({ isOpen, onClose }) => {
               </p>
             </div>
 
+            {error && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '10px 14px',
+                  background: 'rgba(239, 68, 68, 0.15)',
+                  border: '1px solid rgba(239, 68, 68, 0.4)',
+                  borderRadius: '8px',
+                  color: '#fca5a5',
+                  fontSize: '0.82rem',
+                  marginBottom: '14px'
+                }}
+              >
+                <AlertCircle size={16} />
+                <span>{error}</span>
+              </div>
+            )}
+
             <form onSubmit={handleSendReset}>
               <div className="form-group">
                 <label className="form-label">Passenger Email Address</label>
@@ -109,6 +164,7 @@ export const ForgotPasswordModal = ({ isOpen, onClose }) => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -116,10 +172,20 @@ export const ForgotPasswordModal = ({ isOpen, onClose }) => {
               <button
                 type="submit"
                 className="btn-primary"
-                style={{ width: '100%', padding: '12px', marginTop: '14px' }}
+                style={{ width: '100%', padding: '12px', marginTop: '14px', opacity: isLoading ? 0.7 : 1 }}
+                disabled={isLoading}
               >
-                <Send size={16} />
-                <span>Send Reset Link</span>
+                {isLoading ? (
+                  <>
+                    <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />
+                    <span>Sending...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send size={16} />
+                    <span>Send Reset Link</span>
+                  </>
+                )}
               </button>
 
               <button

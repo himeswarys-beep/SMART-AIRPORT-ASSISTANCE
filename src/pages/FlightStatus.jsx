@@ -125,7 +125,7 @@ export const FlightStatus = () => {
             <input
               type="text"
               className="navbar-search-input"
-              style={{ background: 'rgba(5, 11, 24, 0.6)', paddingLeft: '40px' }}
+              style={{ background: 'rgba(245, 248, 255, 0.97)', paddingLeft: '40px' }}
               placeholder="Search flight number, city, or airline..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -137,7 +137,7 @@ export const FlightStatus = () => {
             value={selectedAirline}
             onChange={(e) => setSelectedAirline(e.target.value)}
             className="form-input"
-            style={{ padding: '10px 14px', background: 'rgba(5, 11, 24, 0.6)' }}
+            style={{ padding: '10px 14px', background: 'rgba(245, 247, 252, 1)6)' }}
           >
             <option value="all">All Airlines</option>
             <option value="6E">IndiGo (6E)</option>
@@ -153,7 +153,7 @@ export const FlightStatus = () => {
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
             className="form-input"
-            style={{ padding: '10px 14px', background: 'rgba(5, 11, 24, 0.6)' }}
+            style={{ padding: '10px 14px', background: 'rgba(249, 250, 252, 1)' }}
           >
             <option value="all">All Flight Statuses</option>
             <option value="on time">On Time</option>
