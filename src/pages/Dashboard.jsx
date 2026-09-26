@@ -279,9 +279,9 @@ export const Dashboard = () => {
             </div>
 
             <div className="metric-pill countdown-box">
-              <span className="metric-label" style={{ color: '#0284c7' }}>Boarding In</span>
-              <span className="metric-value">
-                {padZero(boardingCountdown.hours)}h : {padZero(boardingCountdown.minutes)}m : {padZero(boardingCountdown.seconds)}s
+              <span className="metric-label" style={{ color: '#0284c7' }}>Boarding Status</span>
+              <span className="metric-value" style={{ fontSize: boardingCountdown.status === 'countdown' ? '0.82rem' : '0.95rem' }}>
+                {boardingCountdown.displayText || 'Boarding time unavailable'}
               </span>
             </div>
 

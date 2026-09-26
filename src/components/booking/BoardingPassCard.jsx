@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Plane, 
   Download, 
@@ -15,6 +15,7 @@ import {
   PlaneLanding 
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { calculateBoardingCountdown } from '../../utils/countdownUtils';
 import './BoardingPassCard.css';
 
 export const BoardingPassCard = ({
@@ -23,6 +24,16 @@ export const BoardingPassCard = ({
   onDownload
 }) => {
   const [copied, setCopied] = useState(false);
+  const [countdown, setCountdown] = useState(() => calculateBoardingCountdown(flightData));
+
+  useEffect(() => {
+    const updateCountdown = () => {
+      setCountdown(calculateBoardingCountdown(flightData));
+    };
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [flightData]);
 
   // Fallback default flight values aligned with Aerova context
   const ticket = {
@@ -134,10 +145,31 @@ export const BoardingPassCard = ({
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
               <div className="ticket-status-pill">
                 <CheckCircle2 size={13} color="#10b981" />
                 <span>{ticket.flightStatus}</span>
+              </div>
+              <div
+                className="ticket-status-pill"
+                style={{
+                  background:
+                    countdown.status === 'now'
+                      ? 'rgba(16, 185, 129, 0.2)'
+                      : countdown.status === 'closed'
+                      ? 'rgba(239, 68, 68, 0.2)'
+                      : 'rgba(56, 189, 248, 0.15)',
+                  color:
+                    countdown.status === 'now'
+                      ? '#10b981'
+                      : countdown.status === 'closed'
+                      ? '#fca5a5'
+                      : '#38bdf8',
+                  border: '1px solid rgba(56, 189, 248, 0.3)'
+                }}
+              >
+                <Clock size={13} />
+                <span>Boarding: {countdown.displayText}</span>
               </div>
               <div className="ticket-airline-sub">
                 PNR: <strong style={{ color: '#38bdf8' }}>{ticket.pnr}</strong>
@@ -270,8 +302,11 @@ export const BoardingPassCard = ({
           </div>
 
           {/* Footer Notice Banner */}
-          <div className="ticket-footer-notice">
+          <div className="ticket-footer-notice" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
             <span>{ticket.notice}</span>
+            <span style={{ color: '#38bdf8', fontWeight: 800, fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}>
+              BOARDING COUNTDOWN: {countdown.displayText}
+            </span>
           </div>
         </div>
 

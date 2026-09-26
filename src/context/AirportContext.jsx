@@ -10,6 +10,7 @@ import {
 } from '../utils/airportMockData';
 import { supabase } from '../lib/supabase';
 import { useAuth } from './AuthContext';
+import { calculateBoardingCountdown } from '../utils/countdownUtils';
 
 const AirportContext = createContext();
 
@@ -529,28 +530,19 @@ export const AirportProvider = ({ children }) => {
     addToast('Assistance Requested', `Booking ID ${newBooking.id} confirmed`, 'success');
   };
 
-  // Simulate Live Countdown for Boarding (e.g. Boarding at 18:45 IST)
-  const [boardingCountdown, setBoardingCountdown] = useState({
-    hours: 0,
-    minutes: 28,
-    seconds: 45
-  });
+  // Dynamic Live Countdown for Boarding calculated from actual flight date & time
+  const [boardingCountdown, setBoardingCountdown] = useState(() =>
+    calculateBoardingCountdown(activeBooking || user)
+  );
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setBoardingCountdown((prev) => {
-        if (prev.seconds > 0) {
-          return { ...prev, seconds: prev.seconds - 1 };
-        } else if (prev.minutes > 0) {
-          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        } else if (prev.hours > 0) {
-          return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        }
-        return prev;
-      });
-    }, 1000);
+    const updateCountdown = () => {
+      setBoardingCountdown(calculateBoardingCountdown(activeBooking || user));
+    };
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [activeBooking, user]);
 
   // 11. My Trips & Flight Booking State with localStorage persistence
   const [myTrips, setMyTrips] = useState([]);

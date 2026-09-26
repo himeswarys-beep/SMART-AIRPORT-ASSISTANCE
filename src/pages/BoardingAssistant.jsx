@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   QrCode,
@@ -18,13 +18,25 @@ import {
 import confetti from 'canvas-confetti';
 import { useAirport } from '../context/AirportContext';
 import BoardingPassCard from '../components/booking/BoardingPassCard';
+import { calculateBoardingCountdown } from '../utils/countdownUtils';
 
 export const BoardingAssistant = () => {
-  const { user, activeBooking, boardingCountdown, addToast } = useAirport();
+  const { user, activeBooking, addToast } = useAirport();
   const navigate = useNavigate();
   const [isAlertActive, setIsAlertActive] = useState(true);
 
-  const padZero = (n) => (n < 10 ? `0${n}` : n);
+  const bk = activeBooking || (user?.flightNumber ? user : null);
+
+  const [bkCountdown, setBkCountdown] = useState(() => calculateBoardingCountdown(bk));
+
+  useEffect(() => {
+    const update = () => {
+      setBkCountdown(calculateBoardingCountdown(bk));
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [bk]);
 
   const handleDownloadPass = () => {
     confetti({
@@ -47,8 +59,6 @@ export const BoardingAssistant = () => {
   const handleSetReminder = () => {
     addToast('Boarding Alarm Set', 'Push notification scheduled 15 mins prior to gate close', 'success');
   };
-
-  const bk = activeBooking || (user?.flightNumber ? user : null);
 
   if (!bk) {
     return (
@@ -177,15 +187,15 @@ export const BoardingAssistant = () => {
               Boarding Countdown
             </span>
 
-            {/* Glowing circular timer */}
+            {/* Glowing countdown widget */}
             <div
               style={{
-                width: '160px',
-                height: '160px',
-                borderRadius: '50%',
-                border: '4px solid rgba(56, 189, 248, 0.2)',
-                borderTopColor: 'var(--accent-peach-bright)',
-                borderRightColor: 'var(--sky-blue)',
+                minWidth: '220px',
+                minHeight: '130px',
+                padding: '16px',
+                borderRadius: '24px',
+                border: '3px solid rgba(56, 189, 248, 0.3)',
+                background: 'rgba(11, 23, 54, 0.85)',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -195,11 +205,31 @@ export const BoardingAssistant = () => {
                 position: 'relative'
               }}
             >
-              <Clock size={22} color="var(--accent-peach)" style={{ marginBottom: '4px' }} />
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.45rem', fontWeight: 800, color: '#ffffff' }}>
-                {padZero(boardingCountdown.minutes)}m {padZero(boardingCountdown.seconds)}s
+              <Clock size={22} color="var(--accent-peach)" style={{ marginBottom: '6px' }} />
+              <div
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: bkCountdown.status === 'countdown' ? '0.92rem' : '1.25rem',
+                  fontWeight: 800,
+                  color:
+                    bkCountdown.status === 'now'
+                      ? 'var(--status-on-time)'
+                      : bkCountdown.status === 'closed'
+                      ? '#ef4444'
+                      : '#ffffff',
+                  textAlign: 'center',
+                  lineHeight: '1.4'
+                }}
+              >
+                {bkCountdown.displayText}
               </div>
-              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Gate {bk.gate} Closes Soon</span>
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                {bkCountdown.status === 'closed'
+                  ? 'Gate Closed'
+                  : bkCountdown.status === 'now'
+                  ? 'Boarding in Progress'
+                  : `Gate ${bk.gate} Departure`}
+              </span>
             </div>
 
             <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', maxWidth: '280px', lineHeight: 1.4 }}>
