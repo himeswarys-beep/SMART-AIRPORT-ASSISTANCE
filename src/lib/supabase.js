@@ -1,30 +1,36 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Support both Vercel (VITE_SUPABASE_ANON_KEY) and local (.env VITE_SUPABASE_PUBLISHABLE_KEY)
+// Support multiple env var naming conventions:
+// - VITE_SUPABASE_ANON_KEY  (standard / Vercel recommended)
+// - VITE_SUPABASE_PUBLISHABLE_KEY (legacy local .env name)
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey =
   import.meta.env.VITE_SUPABASE_ANON_KEY ||
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-// Guard: if env vars are missing (e.g. misconfigured deployment), create a
-// safe dummy client that won't crash the app with "Invalid supabaseUrl".
-const FALLBACK_URL = 'https://placeholder.supabase.co';
-const FALLBACK_KEY = 'placeholder-anon-key';
+const isValidUrl =
+  typeof supabaseUrl === 'string' && supabaseUrl.startsWith('https://');
+const isValidKey =
+  typeof supabaseKey === 'string' && supabaseKey.length > 10;
+const isValid = isValidUrl && isValidKey;
 
-const isValid =
-  typeof supabaseUrl === 'string' &&
-  supabaseUrl.startsWith('http') &&
-  typeof supabaseKey === 'string' &&
-  supabaseKey.length > 10;
-
-if (!isValid) {
-  console.warn(
-    '[AEROVA] Supabase env vars missing or invalid.\n' +
-    'Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your Vercel project settings.'
+if (!isValidUrl) {
+  console.error(
+    '[AEROVA] VITE_SUPABASE_URL is missing or invalid.\n' +
+    'Add it in Vercel → Project → Settings → Environment Variables.\n' +
+    `Current value: ${supabaseUrl}`
+  );
+}
+if (!isValidKey) {
+  console.error(
+    '[AEROVA] Supabase key env var is missing.\n' +
+    'Add VITE_SUPABASE_ANON_KEY in Vercel → Project → Settings → Environment Variables.'
   );
 }
 
+// Use a dummy URL/key so the app renders without crashing;
+// any auth call will return a proper error instead of a blank white screen.
 export const supabase = createClient(
-  isValid ? supabaseUrl : FALLBACK_URL,
-  isValid ? supabaseKey : FALLBACK_KEY
+  isValid ? supabaseUrl : 'https://placeholder.supabase.co',
+  isValid ? supabaseKey : 'placeholder-anon-key'
 );
