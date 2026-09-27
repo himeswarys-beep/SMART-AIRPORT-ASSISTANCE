@@ -3,10 +3,10 @@ import { useAirport } from '../context/AirportContext';
 import { ArrowLeftRight, User, CheckCircle2, Clock, XCircle, Send, Sparkles, Shield, Compass } from 'lucide-react';
 
 export const SeatSwap = () => {
-  const { user, myTrips, addToast } = useAirport();
+  const { user, activeBooking, myTrips, addToast, updateSeat, boardingCountdown } = useAirport();
 
   // Active user trip
-  const activeTrip = myTrips[0] || {
+  const activeTrip = activeBooking || myTrips[0] || {
     flightNumber: user?.flightNumber || '6E 204',
     airline: user?.airline || 'IndiGo',
     from: user?.from || 'MAA',
@@ -14,6 +14,31 @@ export const SeatSwap = () => {
     seat: user?.seat || '12A',
     pnr: user?.pnr || 'PNR984'
   };
+
+  // 2-Hour Pre-Boarding Condition Check
+  const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
+  const checkSwapAllowed = () => {
+    if (!boardingCountdown || boardingCountdown.status === 'unavailable') {
+      return { allowed: true, reason: '' };
+    }
+    if (boardingCountdown.status === 'closed') {
+      return { allowed: false, reason: 'Flight boarding is closed. Seat swaps are no longer permitted.' };
+    }
+    if (boardingCountdown.status === 'now') {
+      return { allowed: false, reason: 'Boarding is currently in progress. Seat swaps are closed.' };
+    }
+    if (boardingCountdown.status === 'countdown' && boardingCountdown.totalMs < TWO_HOURS_MS) {
+      const minutesLeft = Math.max(0, Math.floor(boardingCountdown.totalMs / (1000 * 60)));
+      return { 
+        allowed: false, 
+        reason: `Seat swaps close 2 hours before flight boarding. Boarding starts in ${minutesLeft} mins.` 
+      };
+    }
+    return { allowed: true, reason: '' };
+  };
+
+  const swapEligibility = checkSwapAllowed();
+  const isSwapAllowed = swapEligibility.allowed;
 
   // Demo Seat Swap Requests State
   const [swapRequests, setSwapRequests] = useState([
@@ -44,9 +69,14 @@ export const SeatSwap = () => {
 
   const handleSendSwapRequest = (e) => {
     e.preventDefault();
+    if (!isSwapAllowed) {
+      addToast('Seat Swap Closed', swapEligibility.reason || 'Seat swaps close 2 hours before boarding.', 'error');
+      return;
+    }
+    const currentAssignedSeat = user?.seat || activeTrip.seat || '14B';
     const newReq = {
       id: `SWAP-${Math.floor(1000 + Math.random() * 9000)}`,
-      currentSeat: activeTrip.seat || user.seat || '14B',
+      currentSeat: `${currentAssignedSeat}`,
       requestedSeat,
       targetPassenger,
       reason,
@@ -62,6 +92,17 @@ export const SeatSwap = () => {
     setSwapRequests((prev) =>
       prev.map((r) => (r.id === reqId ? { ...r, status: newStatus } : r))
     );
+
+    if (newStatus === 'Accepted') {
+      const targetReq = swapRequests.find((r) => r.id === reqId);
+      if (targetReq) {
+        const newSeat = targetReq.requestedSeat.split(' ')[0];
+        updateSeat(newSeat);
+        addToast('Seat Swap Confirmed!', `Your assigned seat updated to Seat ${newSeat} across your dashboard and ticket.`, 'success');
+        return;
+      }
+    }
+
     addToast(`Swap Request ${newStatus}`, `Passenger response updated to ${newStatus}`, newStatus === 'Accepted' ? 'success' : 'info');
   };
 
@@ -125,7 +166,7 @@ export const SeatSwap = () => {
           <div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>YOUR CURRENT ASSIGNED SEAT</div>
             <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', fontFamily: 'var(--font-mono)' }}>
-              Seat {activeTrip.seat || user.seat || '14B'}
+              Seat {user?.seat || activeTrip.seat || '14B'}
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--sky-blue)' }}>
               {activeTrip.airline} • Flight {activeTrip.flightNumber} • PNR: {activeTrip.pnr}
@@ -139,12 +180,28 @@ export const SeatSwap = () => {
         <div className="glass-panel" style={{ padding: '24px' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px' }}>Request Seat Swap</h2>
 
+          {/* Policy Notice */}
+          {!isSwapAllowed ? (
+            <div style={{ padding: '12px 16px', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', fontSize: '0.88rem' }}>
+              <Clock size={18} />
+              <div>
+                <strong>Seat Swapping Restricted:</strong> {swapEligibility.reason}
+              </div>
+            </div>
+          ) : (
+            <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)', color: '#10b981', display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', fontSize: '0.82rem' }}>
+              <CheckCircle2 size={16} />
+              <span>Seat exchanges are available up to 2 hours prior to flight boarding time.</span>
+            </div>
+          )}
+
           <form onSubmit={handleSendSwapRequest}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {/* Select Preferred Passenger / Seat */}
               <div className="search-field-group">
                 <label className="search-field-label">Select Target Passenger & Preferred Seat</label>
                 <select
+                  disabled={!isSwapAllowed}
                   className="search-select-custom"
                   value={requestedSeat}
                   onChange={(e) => {
@@ -165,6 +222,7 @@ export const SeatSwap = () => {
               <div className="search-field-group">
                 <label className="search-field-label">Optional Swap Reason</label>
                 <textarea
+                  disabled={!isSwapAllowed}
                   className="search-input-custom"
                   rows={3}
                   placeholder="e.g. Traveling with family members, need window seat, tall passenger extra legroom..."
@@ -174,7 +232,18 @@ export const SeatSwap = () => {
                 />
               </div>
 
-              <button type="submit" className="btn-peach" style={{ padding: '12px', fontSize: '0.95rem', width: '100%' }}>
+              <button 
+                type="submit" 
+                disabled={!isSwapAllowed}
+                className="btn-peach" 
+                style={{ 
+                  padding: '12px', 
+                  fontSize: '0.95rem', 
+                  width: '100%',
+                  opacity: isSwapAllowed ? 1 : 0.5,
+                  cursor: isSwapAllowed ? 'pointer' : 'not-allowed'
+                }}
+              >
                 <Send size={16} />
                 <span>Send Swap Request</span>
               </button>

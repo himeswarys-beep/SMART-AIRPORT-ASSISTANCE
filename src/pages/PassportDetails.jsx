@@ -30,7 +30,7 @@ export const PassportDetails = () => {
     passportNumber: passportDetails?.passportNumber || '',
     fullName: passportDetails?.fullName || user?.name || '',
     dob: passportDetails?.dob || '',
-    gender: passportDetails?.gender || 'Male',
+    gender: passportDetails?.gender || '',
     nationality: passportDetails?.nationality || '',
     passportExpiry: passportDetails?.passportExpiry || '',
     passportCountry: passportDetails?.passportCountry || '',
@@ -199,29 +199,7 @@ export const PassportDetails = () => {
             </p>
           </div>
 
-          {/* DigiYatra Security Badge */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '12px 18px',
-              background: 'rgba(16, 185, 129, 0.12)',
-              border: '1px solid rgba(16, 185, 129, 0.3)',
-              borderRadius: '12px',
-              color: 'var(--status-on-time)',
-              marginBottom: '28px',
-              fontSize: '0.84rem'
-            }}
-          >
-            <ShieldCheck size={22} style={{ flexShrink: 0 }} />
-            <div>
-              <strong>DigiYatra Biometric Security Encrypted</strong>
-              <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>
-                Your passport information is stored locally and used exclusively for your flight journey check-in.
-              </div>
-            </div>
-          </div>
+        
 
           {/* Form Error Banner */}
           {formError && (
@@ -279,7 +257,7 @@ export const PassportDetails = () => {
             </div>
           </div>
 
-          <div style={{ textAlign: 'center', marginBottom: '24px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '24px', color: '#043d61ff', fontSize: '0.9rem' }}>
             — OR Option 2: Enter Manually —
           </div>
 
@@ -295,7 +273,7 @@ export const PassportDetails = () => {
             >
               {/* 1. Passport Number */}
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">{t.passportNumber} *</label>
+                <label className="form-label"style={{color:"#043d61ff"}}>{t.passportNumber} *</label>
                 <div className="form-input-box">
                   <CreditCard className="input-icon" size={17} />
                   <input
@@ -313,7 +291,7 @@ export const PassportDetails = () => {
 
               {/* 2. Full Name */}
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">{t.fullName} *</label>
+                <label className="form-label"style={{color:"#043d61ff"}}>{t.fullName} *</label>
                 <div className="form-input-box">
                   <User className="input-icon" size={17} />
                   <input
@@ -330,7 +308,7 @@ export const PassportDetails = () => {
 
               {/* 3. Date of Birth */}
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">{t.dateOfBirth} *</label>
+                <label className="form-label"style={{color:"#043d61ff"}}>{t.dateOfBirth} *</label>
                 <div className="form-input-box">
                   <Calendar className="input-icon" size={17} />
                   <input
@@ -346,7 +324,7 @@ export const PassportDetails = () => {
 
               {/* 4. Gender */}
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">{t.gender} *</label>
+                <label className="form-label"style={{color:"#043d61ff"}}>{t.gender} *</label>
                 <div className="form-input-box">
                   <User className="input-icon" size={17} />
                   <select
@@ -366,7 +344,7 @@ export const PassportDetails = () => {
 
               {/* 5. Nationality */}
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">{t.nationality} *</label>
+                <label className="form-label"style={{color:"#043d61ff"}}>{t.nationality} *</label>
                 <div className="form-input-box">
                   <Flag className="input-icon" size={17} />
                   <input
@@ -383,7 +361,7 @@ export const PassportDetails = () => {
 
               {/* 6. Passport Expiry Date */}
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">{t.passportExpiryDate} *</label>
+                <label className="form-label"style={{color:"#043d61ff"}}>{t.passportExpiryDate} *</label>
                 <div className="form-input-box">
                   <Calendar className="input-icon" size={17} />
                   <input
@@ -399,7 +377,7 @@ export const PassportDetails = () => {
 
               {/* 7. Passport Issued Country */}
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">{t.passportIssuedCountry} *</label>
+                <label className="form-label"style={{color:"#043d61ff"}}>{t.passportIssuedCountry} *</label>
                 <div className="form-input-box">
                   <Globe className="input-icon" size={17} />
                   <input
@@ -416,7 +394,7 @@ export const PassportDetails = () => {
 
               {/* Email Address */}
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Account Email *</label>
+                <label className="form-label"style={{color:"#043d61ff"}}>Account Email *</label>
                 <div className="form-input-box">
                   <Mail className="input-icon" size={17} />
                   <input
@@ -433,7 +411,7 @@ export const PassportDetails = () => {
 
               {/* 8. Contact Number */}
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">{t.contactNumber} *</label>
+                <label className="form-label"style={{color:"#043d61ff"}}>{t.contactNumber} *</label>
                 <div className="form-input-box">
                   <Phone className="input-icon" size={17} />
                   <input

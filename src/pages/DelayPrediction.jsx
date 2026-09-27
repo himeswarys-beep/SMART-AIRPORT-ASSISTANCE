@@ -15,10 +15,41 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { useAirport } from '../context/AirportContext';
+import { generatePredictionForFlight } from '../utils/airportMockData';
 
 export const DelayPrediction = () => {
-  const { delayPrediction, flights } = useAirport();
-  const [selectedFlightCode, setSelectedFlightCode] = useState('6E 204');
+  const { user, activeBooking, activeAirport, flights } = useAirport();
+
+  // Active user booked flight details
+  const activeFlightNumber = activeBooking?.flightNumber || user?.flightNumber || 'IX 749';
+
+  const activeFlightObj = {
+    id: 'active-user-flight',
+    flightNumber: activeFlightNumber,
+    from: activeBooking?.from || user?.from || 'BBI',
+    to: activeBooking?.to || user?.to || 'TRZ',
+    airline: activeBooking?.airline || user?.airline || 'Air India Express',
+    airlineCode: activeBooking?.airlineCode || 'IX'
+  };
+
+  // List of all flight options (putting active booked flight at the top)
+  const allFlightOptions = [
+    activeFlightObj,
+    ...flights.filter(f => f.flightNumber !== activeFlightNumber)
+  ];
+
+  const [selectedFlightCode, setSelectedFlightCode] = useState(activeFlightNumber);
+
+  // Sync selected flight if active booking updates
+  React.useEffect(() => {
+    if (activeFlightNumber) {
+      setSelectedFlightCode(activeFlightNumber);
+    }
+  }, [activeFlightNumber]);
+
+  // Derive dynamic delay prediction analytics for the selected target flight
+  const selectedFlightObj = allFlightOptions.find(f => f.flightNumber === selectedFlightCode) || activeFlightObj;
+  const currentPrediction = generatePredictionForFlight(selectedFlightObj, activeAirport?.code);
 
   return (
     <div className="main-content animate-fade-in">
@@ -57,10 +88,10 @@ export const DelayPrediction = () => {
             value={selectedFlightCode}
             onChange={(e) => setSelectedFlightCode(e.target.value)}
             className="form-input"
-            style={{ padding: '8px 14px', background: 'rgba(118, 200, 237, 0.94)94)', width: 'auto', minWidth: '220px' }}
+            style={{ padding: '8px 14px', background: 'rgba(118, 200, 237, 0.94)', width: 'auto', minWidth: '240px' }}
           >
-            {flights.map((f) => (
-              <option key={f.id} value={f.flightNumber}>
+            {allFlightOptions.map((f) => (
+              <option key={f.id || f.flightNumber} value={f.flightNumber}>
                 {f.flightNumber} ({f.from} ➔ {f.to}) - {f.airline}
               </option>
             ))}
@@ -70,7 +101,7 @@ export const DelayPrediction = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Radio size={14} color="var(--sky-blue)" className="animate-pulse-glow" />
           <span style={{ fontSize: '0.78rem', color: 'var(--accent-peach)', fontFamily: 'var(--font-mono)' }}>
-            Model Accuracy: 96.4% (Based on 140,000 MAA departures)
+            Model Accuracy: 96.4% (Based on 140,000 departures)
           </span>
         </div>
       </div>
@@ -102,23 +133,23 @@ export const DelayPrediction = () => {
                 d="M 20,100 A 80,80 0 0,1 180,100"
                 fill="none"
                 stroke="rgba(56, 189, 248, 0.2)"
-                stroke-width="18"
-                stroke-linecap="round"
+                strokeWidth="18"
+                strokeLinecap="round"
               />
               <path
                 d="M 20,100 A 80,80 0 0,1 180,100"
                 fill="none"
                 stroke="url(#riskGrad)"
-                stroke-width="18"
-                stroke-linecap="round"
-                stroke-dasharray="251"
-                stroke-dashoffset={251 - (251 * (100 - delayPrediction.riskPercentage)) / 100}
+                strokeWidth="18"
+                strokeLinecap="round"
+                strokeDasharray="251"
+                strokeDashoffset={251 - (251 * (100 - currentPrediction.riskPercentage)) / 100}
               />
               <defs>
                 <linearGradient id="riskGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#10b981" />
-                  <stop offset="60%" stop-color="#38bdf8" />
-                  <stop offset="100%" stop-color="#f59e0b" />
+                  <stop offset="0%" stopColor="#10b981" />
+                  <stop offset="60%" stopColor="#38bdf8" />
+                  <stop offset="100%" stopColor="#f59e0b" />
                 </linearGradient>
               </defs>
             </svg>
@@ -136,7 +167,7 @@ export const DelayPrediction = () => {
               }}
             >
               <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--status-on-time)', fontFamily: 'var(--font-mono)', lineHeight: 1 }}>
-                {delayPrediction.riskPercentage}%
+                {currentPrediction.riskPercentage}%
               </div>
               <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 Delay Probability
@@ -156,11 +187,11 @@ export const DelayPrediction = () => {
               marginBottom: '12px'
             }}
           >
-            {delayPrediction.riskLevel} • {delayPrediction.predictedDepartureDelay}
+            {currentPrediction.riskLevel} • {currentPrediction.predictedDepartureDelay}
           </div>
 
           <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.4, maxWidth: '280px' }}>
-            {delayPrediction.aiSummary}
+            {currentPrediction.aiSummary}
           </p>
         </div>
 
@@ -174,13 +205,13 @@ export const DelayPrediction = () => {
               <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(56, 189, 248, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--sky-blue)' }}>
                 <CloudSun size={20} />
               </div>
-              <span className="module-badge">{delayPrediction.weatherCondition.status}</span>
+              <span className="module-badge">{currentPrediction.weatherCondition.status}</span>
             </div>
             <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', marginBottom: '8px' }}>Weather Radar</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-              <div>Visibility: <strong style={{ color: '#ffffff' }}>{delayPrediction.weatherCondition.visibility}</strong></div>
-              <div>Wind Speed: <strong style={{ color: '#ffffff' }}>{delayPrediction.weatherCondition.windSpeed}</strong></div>
-              <div>Precipitation: <strong style={{ color: 'var(--status-on-time)' }}>{delayPrediction.weatherCondition.precipitation}</strong></div>
+              <div>Visibility: <strong style={{ color: '#ffffff' }}>{currentPrediction.weatherCondition.visibility}</strong></div>
+              <div>Wind Speed: <strong style={{ color: '#ffffff' }}>{currentPrediction.weatherCondition.windSpeed}</strong></div>
+              <div>Precipitation: <strong style={{ color: 'var(--status-on-time)' }}>{currentPrediction.weatherCondition.precipitation}</strong></div>
             </div>
           </div>
 
@@ -190,13 +221,13 @@ export const DelayPrediction = () => {
               <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(251, 146, 60, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-peach-bright)' }}>
                 <Plane size={20} />
               </div>
-              <span className="module-badge badge-peach">{delayPrediction.airTrafficCongestion.status}</span>
+              <span className="module-badge badge-peach">{currentPrediction.airTrafficCongestion.status}</span>
             </div>
             <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', marginBottom: '8px' }}>Runway Traffic</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-              <div>Runway Queue: <strong style={{ color: '#ffffff' }}>{delayPrediction.airTrafficCongestion.runwayQueues}</strong></div>
-              <div>Holding Time: <strong style={{ color: 'var(--status-on-time)' }}>{delayPrediction.airTrafficCongestion.airspaceHolding}</strong></div>
-              <div>Traffic Congestion Index: <strong style={{ color: 'var(--sky-blue)' }}>{delayPrediction.airTrafficCongestion.trafficIndex} / 100</strong></div>
+              <div>Runway Queue: <strong style={{ color: '#ffffff' }}>{currentPrediction.airTrafficCongestion.runwayQueues}</strong></div>
+              <div>Holding Time: <strong style={{ color: 'var(--status-on-time)' }}>{currentPrediction.airTrafficCongestion.airspaceHolding}</strong></div>
+              <div>Traffic Congestion Index: <strong style={{ color: 'var(--sky-blue)' }}>{currentPrediction.airTrafficCongestion.trafficIndex} / 100</strong></div>
             </div>
           </div>
 
@@ -210,9 +241,9 @@ export const DelayPrediction = () => {
             </div>
             <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', marginBottom: '8px' }}>Inbound Aircraft</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-              <div>Reg: <strong style={{ color: 'var(--accent-peach)' }}>{delayPrediction.inboundTurnaround.aircraftId}</strong></div>
-              <div>Origin: <strong style={{ color: '#ffffff' }}>{delayPrediction.inboundTurnaround.inboundFrom}</strong></div>
-              <div>Status: <strong style={{ color: 'var(--status-on-time)' }}>{delayPrediction.inboundTurnaround.inboundStatus}</strong></div>
+              <div>Reg: <strong style={{ color: 'var(--accent-peach)' }}>{currentPrediction.inboundTurnaround.aircraftId}</strong></div>
+              <div>Origin: <strong style={{ color: '#ffffff' }}>{currentPrediction.inboundTurnaround.inboundFrom}</strong></div>
+              <div>Status: <strong style={{ color: 'var(--status-on-time)' }}>{currentPrediction.inboundTurnaround.inboundStatus}</strong></div>
             </div>
           </div>
         </div>
@@ -223,10 +254,10 @@ export const DelayPrediction = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <BarChart3 size={20} color="var(--sky-blue)" />
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>Past 7 Days Route Reliability (MAA ✈ BLR)</h3>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>Past 7 Days Route Reliability ({currentPrediction.from} ✈ {currentPrediction.to})</h3>
           </div>
           <span style={{ fontSize: '0.78rem', color: 'var(--status-on-time)', fontWeight: 700 }}>
-            94.2% On-Time Average
+            {currentPrediction.avgOnTime}% On-Time Average
           </span>
         </div>
 
@@ -242,15 +273,7 @@ export const DelayPrediction = () => {
             borderBottom: '1px solid rgba(255,255,255,0.1)'
           }}
         >
-          {[
-            { day: 'Mon', onTime: 96, delay: 0 },
-            { day: 'Tue', onTime: 92, delay: 5 },
-            { day: 'Wed', onTime: 98, delay: 0 },
-            { day: 'Thu', onTime: 85, delay: 14 },
-            { day: 'Fri', onTime: 94, delay: 4 },
-            { day: 'Sat', onTime: 96, delay: 0 },
-            { day: 'Today', onTime: 95, delay: 3, isToday: true }
-          ].map((bar, i) => (
+          {currentPrediction.weeklyReliability.map((bar, i) => (
             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', height: '100%', justifyContent: 'flex-end' }}>
               <span style={{ fontSize: '0.72rem', color: bar.isToday ? 'var(--accent-peach-bright)' : 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                 {bar.onTime}%

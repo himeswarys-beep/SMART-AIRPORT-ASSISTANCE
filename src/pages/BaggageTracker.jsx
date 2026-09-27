@@ -17,15 +17,36 @@ import {
 import { useAirport } from '../context/AirportContext';
 
 export const BaggageTracker = () => {
-  const { baggageQuery, setBaggageQuery, baggageStatus, lostBaggageReports, reportLostBaggage, addToast } = useAirport();
-  const [searchInput, setSearchInput] = useState(baggageQuery);
+  const { user, activeBooking, baggageQuery, setBaggageQuery, baggageStatus, lostBaggageReports, reportLostBaggage, addToast } = useAirport();
+  const [searchInput, setSearchInput] = useState(baggageStatus?.tag || baggageQuery);
   const [showReportModal, setShowReportModal] = useState(false);
 
+  // Sync search input when baggageStatus tag changes
+  React.useEffect(() => {
+    if (baggageStatus?.tag) {
+      setSearchInput(baggageStatus.tag);
+    }
+  }, [baggageStatus?.tag]);
+
+  // Dynamic context defaults
+  const activeFlightNum = activeBooking?.flightNumber || user?.flightNumber || 'IX 749';
+  const activeTag = baggageStatus?.tag || activeBooking?.baggageTag || user?.baggageTag || 'TAG-IX-99214';
+  const activePassenger = user?.name || 'Passenger';
+  const activePhone = user?.phone || '+91 98401 23456';
+
   // Report Form state
-  const [lostTag, setLostTag] = useState('');
-  const [lostFlight, setLostFlight] = useState('6E 204');
+  const [lostTag, setLostTag] = useState(activeTag);
+  const [lostFlight, setLostFlight] = useState(activeFlightNum);
   const [lostDesc, setLostDesc] = useState('');
-  const [contactPhone, setContactPhone] = useState('+91 98401 23456');
+  const [contactPhone, setContactPhone] = useState(activePhone);
+
+  React.useEffect(() => {
+    if (showReportModal) {
+      setLostTag(baggageStatus?.tag || activeTag);
+      setLostFlight(activeFlightNum);
+      setContactPhone(activePhone);
+    }
+  }, [showReportModal, baggageStatus?.tag, activeTag, activeFlightNum, activePhone]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -38,11 +59,11 @@ export const BaggageTracker = () => {
     e.preventDefault();
     if (!lostDesc.trim()) return;
     reportLostBaggage({
-      baggageTag: lostTag || 'TAG-UNKNOWN',
-      flight: lostFlight,
-      passenger: 'Arun Kumar',
+      baggageTag: lostTag || activeTag,
+      flight: lostFlight || activeFlightNum,
+      passenger: activePassenger,
       description: lostDesc,
-      contact: contactPhone
+      contact: contactPhone || activePhone
     });
     setShowReportModal(false);
     setLostDesc('');

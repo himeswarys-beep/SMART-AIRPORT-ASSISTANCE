@@ -290,18 +290,27 @@ export const AirportProvider = ({ children }) => {
   const [selectedFloor, setSelectedFloor] = useState('L1');
 
   // 6. Baggage Tracking State
-  const [baggageQuery, setBaggageQuery] = useState('TAG-6E-99214');
-  const [baggageStatus, setBaggageStatus] = useState(() => {
-    const ap = activeAirport || airportsList[0];
-    return generateBaggageStatusForAirport(ap.code);
+  const [baggageQuery, setBaggageQuery] = useState(() => {
+    return activeBooking?.baggageTag || user?.baggageTag || 'TAG-IX-99214';
   });
 
-  const [lostBaggageReports, setLostBaggageReports] = useState([
+  const [baggageStatus, setBaggageStatus] = useState(() => {
+    const ap = activeAirport || airportsList[0];
+    return generateBaggageStatusForAirport(ap.code, activeBooking, user, baggageQuery);
+  });
+
+  useEffect(() => {
+    const ap = activeAirport || airportsList[0];
+    const targetTag = baggageQuery || activeBooking?.baggageTag || user?.baggageTag;
+    setBaggageStatus(generateBaggageStatusForAirport(ap.code, activeBooking, user, targetTag));
+  }, [activeBooking, user, activeAirport, baggageQuery]);
+
+  const [lostBaggageReports, setLostBaggageReports] = useState(() => [
     {
       id: 'REP-MAA-44812',
-      baggageTag: 'TAG-AI-88319',
-      flight: 'AI 542',
-      passenger: 'Arun Kumar',
+      baggageTag: activeBooking?.baggageTag || user?.baggageTag || 'TAG-IX-99214',
+      flight: activeBooking?.flightNumber || user?.flightNumber || 'IX 749',
+      passenger: user?.name || 'Malini',
       date: '2026-09-01',
       description: 'Black Delsey hard-case suitcase with orange ribbon',
       status: 'Investigation in Progress',
@@ -503,7 +512,7 @@ export const AirportProvider = ({ children }) => {
       }
 
       setAssistanceBookings(generateAssistanceBookingsForAirport(code));
-      setBaggageStatus(generateBaggageStatusForAirport(code));
+      setBaggageStatus(generateBaggageStatusForAirport(code, activeBooking, user, baggageQuery));
 
       const mapData = getAirportData(id);
       if (mapData && mapData.locations) {
@@ -648,6 +657,39 @@ export const AirportProvider = ({ children }) => {
     addToast('Booking Reset', 'Active booking cleared', 'info');
   };
 
+  const updateSeat = (newSeat) => {
+    if (!newSeat) return;
+    const cleanedSeat = String(newSeat).trim().split(' ')[0];
+
+    setUser((prev) => (prev ? { ...prev, seat: cleanedSeat } : prev));
+
+    setActiveBooking((prev) => {
+      if (!prev) return prev;
+      const updated = {
+        ...prev,
+        seat: cleanedSeat,
+        seatsAssigned: [cleanedSeat, ...(prev.seatsAssigned?.slice(1) || [])]
+      };
+      try {
+        localStorage.setItem('smart_airport_active_booking', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+
+    setMyTrips((prev) =>
+      prev.map((trip, idx) => {
+        if (idx === 0 || (activeBooking && (trip.id === activeBooking.id || trip.pnr === activeBooking.pnr))) {
+          return {
+            ...trip,
+            seat: cleanedSeat,
+            seatsAssigned: [cleanedSeat, ...(trip.seatsAssigned?.slice(1) || [])]
+          };
+        }
+        return trip;
+      })
+    );
+  };
+
   const cancelBooking = (tripId) => {
     setMyTrips((prev) =>
       prev.map((t) => (t.id === tripId || t.pnr === tripId ? { ...t, tripStatus: 'Cancelled', flightStatus: 'Cancelled' } : t))
@@ -670,6 +712,7 @@ export const AirportProvider = ({ children }) => {
         setIsLoggedIn,
         user,
         setUser,
+        updateSeat,
         activeBooking,
         setActiveBooking,
         clearActiveBooking,

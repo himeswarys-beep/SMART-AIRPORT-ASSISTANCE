@@ -64,8 +64,17 @@ export const AuthProvider = ({ children }) => {
     return await supabase.auth.updateUser({ password: newPassword });
   };
 
+  const loginWithProvider = async (provider) => {
+    return await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, login, register, logout, resetPassword, updatePassword }}>
+    <AuthContext.Provider value={{ user, session, loading, login, register, logout, resetPassword, updatePassword, loginWithProvider }}>
       {children}
     </AuthContext.Provider>
   );

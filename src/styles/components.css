@@ -179,7 +179,7 @@
   position: absolute;
   top: -2px;
   right: -2px;
-  background: #ef4444;
+  background: #0f172a;
   color: #ffffff;
   font-size: 0.68rem;
   font-weight: 800;
@@ -190,7 +190,8 @@
   align-items: center;
   justify-content: center;
   padding: 0 4px;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.4);
+  
 }
 
 .user-profile-pill {
@@ -1093,8 +1094,9 @@
 .notification-panel-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(2, 26, 54, 0.4);
-  backdrop-filter: blur(4px);
+  background: rgba(2, 20, 50, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   z-index: 100;
   display: flex;
   justify-content: flex-end;

@@ -71,37 +71,117 @@ export const generateQueueMetricsForAirport = (airportCode) => {
   };
 };
 
-export const generateDelayPredictionForAirport = (airportCode, flights) => {
-  const selectedFlight = flights.find(f => f.type === 'departure') || flights[0];
-  const flightStr = selectedFlight ? `${selectedFlight.flightNumber} (${selectedFlight.from} → ${selectedFlight.to})` : 'No Flight';
-  
+export const generatePredictionForFlight = (flightObj, airportCode = 'MAA') => {
+  if (!flightObj) {
+    return {
+      flightNumber: 'IX 749',
+      from: 'BBI',
+      to: 'TRZ',
+      airline: 'Air India Express',
+      riskLevel: 'Low Risk',
+      riskPercentage: 18,
+      predictedDepartureDelay: '+5 mins (On Time)',
+      onTimeProbability: '94%',
+      weatherCondition: {
+        status: 'Favorable',
+        visibility: '4900 meters',
+        windSpeed: '11 knots',
+        precipitation: '0% (Clear)',
+        radarIndex: 96
+      },
+      airTrafficCongestion: {
+        status: 'Moderate',
+        runwayQueues: '2 Aircraft awaiting takeoff',
+        airspaceHolding: '0 mins',
+        trafficIndex: 68
+      },
+      inboundTurnaround: {
+        aircraftId: 'VT-IXD',
+        inboundFrom: 'TRZ',
+        inboundStatus: 'Landed safely',
+        groundTurnaroundTime: 'Optimal'
+      },
+      aiSummary: 'Operational parameters for IX 749 (BBI → TRZ) are optimal. High likelihood of on-schedule pushback.',
+      weeklyReliability: [
+        { day: 'Mon', onTime: 96 },
+        { day: 'Tue', onTime: 92 },
+        { day: 'Wed', onTime: 98 },
+        { day: 'Thu', onTime: 88 },
+        { day: 'Fri', onTime: 94 },
+        { day: 'Sat', onTime: 96 },
+        { day: 'Today', onTime: 95, isToday: true }
+      ],
+      avgOnTime: '94.2'
+    };
+  }
+
+  const fn = flightObj.flightNumber || 'IX 749';
+  const from = flightObj.from || 'BBI';
+  const to = flightObj.to || 'TRZ';
+  const airline = flightObj.airline || 'Air India Express';
+
+  const numHash = fn.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const codePrefix = (flightObj.airlineCode || fn.split(' ')[0] || 'IX').toUpperCase();
+
+  let tailReg = 'VT-IXD';
+  if (codePrefix.includes('6E')) tailReg = `VT-IF${String.fromCharCode(65 + (numHash % 20))}`;
+  else if (codePrefix.includes('AI')) tailReg = `VT-AL${String.fromCharCode(65 + (numHash % 20))}`;
+  else if (codePrefix.includes('IX')) tailReg = `VT-IX${String.fromCharCode(65 + (numHash % 20))}`;
+  else if (codePrefix.includes('QP')) tailReg = `VT-YA${String.fromCharCode(65 + (numHash % 20))}`;
+  else if (codePrefix.includes('SG')) tailReg = `VT-SE${String.fromCharCode(65 + (numHash % 20))}`;
+
+  const riskPct = 12 + (numHash % 22);
+  const windKnots = 8 + (numHash % 10);
+  const visibilityMeters = 4400 + (numHash % 20) * 100;
+  const queuesCount = 1 + (numHash % 3);
+  const congestionIdx = 55 + (numHash % 25);
+  const avgOnTime = (91 + (numHash % 7)).toFixed(1);
+
   return {
-    selectedFlight: flightStr,
-    riskLevel: 'Low Risk',
-    riskPercentage: Math.floor(Math.random() * 20) + 5,
-    predictedDepartureDelay: '+5 mins (On Time)',
-    onTimeProbability: `${Math.floor(Math.random() * 15) + 80}%`,
+    flightNumber: fn,
+    from,
+    to,
+    airline,
+    riskLevel: riskPct < 25 ? 'Low Risk' : 'Moderate Risk',
+    riskPercentage: riskPct,
+    predictedDepartureDelay: riskPct < 25 ? '+5 mins (On Time)' : '+15 mins (Minor Delay)',
+    onTimeProbability: `${100 - riskPct}%`,
     weatherCondition: {
-      status: 'Favorable',
-      visibility: '4800 meters',
-      windSpeed: '11 knots',
+      status: riskPct < 28 ? 'Favorable' : 'Moderate Wind',
+      visibility: `${visibilityMeters} meters`,
+      windSpeed: `${windKnots} knots`,
       precipitation: '0% (Clear)',
-      radarIndex: 96
+      radarIndex: 90 + (numHash % 8)
     },
     airTrafficCongestion: {
-      status: 'Moderate',
-      runwayQueues: '2 Aircraft awaiting takeoff',
-      airspaceHolding: '0 mins',
-      trafficIndex: 72
+      status: congestionIdx < 70 ? 'Moderate' : 'Heavy',
+      runwayQueues: `${queuesCount} Aircraft awaiting takeoff`,
+      airspaceHolding: queuesCount > 2 ? '5 mins' : '0 mins',
+      trafficIndex: congestionIdx
     },
     inboundTurnaround: {
-      aircraftId: 'VT-IZB',
-      inboundFrom: 'DEL',
+      aircraftId: tailReg,
+      inboundFrom: to,
       inboundStatus: 'Landed safely',
       groundTurnaroundTime: 'Optimal'
     },
-    aiSummary: `Operational parameters for ${airportCode} are optimal. High likelihood of on-schedule pushback.`
+    aiSummary: `Operational parameters for ${fn} (${from} → ${to}) are optimal. High likelihood of on-schedule pushback.`,
+    weeklyReliability: [
+      { day: 'Mon', onTime: Math.min(99, 90 + (numHash % 8)) },
+      { day: 'Tue', onTime: Math.min(99, 88 + (numHash % 10)) },
+      { day: 'Wed', onTime: Math.min(99, 92 + (numHash % 7)) },
+      { day: 'Thu', onTime: Math.min(99, 85 + (numHash % 12)) },
+      { day: 'Fri', onTime: Math.min(99, 93 + (numHash % 6)) },
+      { day: 'Sat', onTime: Math.min(99, 95 + (numHash % 4)) },
+      { day: 'Today', onTime: Math.min(99, 94 + (numHash % 5)), isToday: true }
+    ],
+    avgOnTime
   };
+};
+
+export const generateDelayPredictionForAirport = (airportCode, flights) => {
+  const selectedFlight = (flights && flights.find(f => f.type === 'departure')) || flights?.[0] || { flightNumber: 'IX 749', from: 'BBI', to: 'TRZ' };
+  return generatePredictionForFlight(selectedFlight, airportCode);
 };
 
 export const generateAssistanceBookingsForAirport = (airportCode) => {
@@ -120,20 +200,27 @@ export const generateAssistanceBookingsForAirport = (airportCode) => {
   ];
 };
 
-export const generateBaggageStatusForAirport = (airportCode) => {
+export const generateBaggageStatusForAirport = (airportCode, booking = null, user = null, customTag = null) => {
+  const flight = booking?.flightNumber || user?.flightNumber || 'IX 749';
+  const passenger = user?.name || booking?.passengerName || 'Malini';
+  const airlineCode = booking?.airlineCode || user?.airlineCode || flight.split(' ')[0] || 'IX';
+  const tag = customTag || booking?.baggageTag || user?.baggageTag || `TAG-${airlineCode}-99214`;
+  const pnr = booking?.pnr || user?.pnr || 'PNR-IX-216614';
+  const origin = booking?.from || user?.from || airportCode || 'MAA';
+
   return {
-    tag: 'TAG-6E-99214',
-    pnr: 'IXM782P',
-    passenger: 'Arun Kumar',
-    flight: '6E 204',
-    weight: '14.2 kg',
+    tag,
+    pnr,
+    passenger,
+    flight,
+    weight: booking?.baggageWeight || '14.2 kg',
     type: 'Check-in Trolley Bag',
-    lastScanLocation: `${airportCode} Baggage Makeup Area`,
+    lastScanLocation: `${origin} Baggage Makeup Area`,
     lastScanTime: '20 mins ago',
     currentStatus: 'Loaded on Aircraft',
     destinationCarousel: 'Belt 01',
     steps: [
-      { id: 1, title: 'Checked In', location: `${airportCode} Counter`, time: '16:45', status: 'completed' },
+      { id: 1, title: 'Checked In', location: `${origin} Counter`, time: '16:45', status: 'completed' },
       { id: 2, title: 'Security Screening', location: 'Inline Scanner', time: '17:10', status: 'completed' },
       { id: 3, title: 'Baggage Makeup Area', location: 'Trolley Cart', time: '17:40', status: 'completed' },
       { id: 4, title: 'Loaded on Aircraft', location: 'Cargo Hold', time: '18:15', status: 'current' },
