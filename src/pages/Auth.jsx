@@ -87,8 +87,8 @@ export const Auth = () => {
     if (msg.includes('rate limit') || msg.includes('too many requests')) {
       return 'Too many attempts. Please wait a moment and try again.';
     }
-    if (msg.includes('network') || msg.includes('fetch') || msg.includes('failed to fetch')) {
-      return 'Network error: Unable to connect to Supabase. If this site is deployed on Vercel/Netlify, please make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables are configured in project settings.';
+    if (msg.includes('network') || msg.includes('fetch') || msg.includes('failed to fetch') || msg.includes('placeholder.supabase.co')) {
+      return 'Network error: Unable to connect to Supabase. Please ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are added in your Vercel project environment variables and redeployed.';
     }
     if (msg.includes('signup is disabled')) {
       return 'Registration is currently disabled. Please contact support.';
@@ -112,13 +112,15 @@ export const Auth = () => {
     try {
       const { error } = await login(loginEmail, loginPassword);
       if (error) {
+        console.error('[AEROVA Auth Login Error]:', error);
         setFormError(mapAuthError(error.message));
       } else {
         addToast('Welcome Back!', `Logged in successfully`, 'success');
         navigate('/language');
       }
     } catch (err) {
-      setFormError(mapAuthError(err.message || 'Network error'));
+      console.error('[AEROVA Auth Login Exception]:', err);
+      setFormError(mapAuthError(err.message || 'Network error: Unable to connect to Supabase backend.'));
     } finally {
       setIsLoading(false);
     }
@@ -130,10 +132,12 @@ export const Auth = () => {
     try {
       const { error } = await loginWithProvider(provider);
       if (error) {
+        console.error('[AEROVA Social Auth Error]:', error);
         setFormError(mapAuthError(error.message));
       }
     } catch (err) {
-      setFormError(mapAuthError(err.message || 'Network error'));
+      console.error('[AEROVA Social Auth Exception]:', err);
+      setFormError(mapAuthError(err.message || 'Network error: Unable to connect to Supabase backend.'));
     } finally {
       setIsLoading(false);
     }
@@ -164,6 +168,7 @@ export const Auth = () => {
       const { data, error } = await register(regEmail, regPassword, regName, regPhone);
 
       if (error) {
+        console.error('[AEROVA Auth Register Error]:', error);
         setFormError(mapAuthError(error.message));
       } else {
         // Check if email confirmation is required
@@ -175,7 +180,8 @@ export const Auth = () => {
         }
       }
     } catch (err) {
-      setFormError('Network error. Please check your connection and try again.');
+      console.error('[AEROVA Auth Register Exception]:', err);
+      setFormError(mapAuthError(err.message || 'Network error: Unable to connect to Supabase backend.'));
     } finally {
       setIsLoading(false);
     }
