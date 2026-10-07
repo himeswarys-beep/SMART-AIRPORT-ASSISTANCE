@@ -68,7 +68,10 @@ export const AuthProvider = ({ children }) => {
     return await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/dashboard`
+        redirectTo: `${window.location.origin}/dashboard`,
+        queryParams: {
+          prompt: 'select_account'
+        }
       }
     });
   };
