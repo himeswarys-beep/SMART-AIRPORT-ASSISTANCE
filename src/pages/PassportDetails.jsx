@@ -17,12 +17,14 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { useAirport } from '../context/AirportContext';
+import { useAuth } from '../context/AuthContext';
 import { translations } from '../utils/translations';
 import { ASSETS } from '../assets/images';
 import { supabase } from '../lib/supabase';
 
 export const PassportDetails = () => {
   const { user, language, passportDetails, setPassportDetails, setUser, addToast } = useAirport();
+  const { completeOnboarding } = useAuth();
   const navigate = useNavigate();
   const t = translations[language] || translations.en;
 
@@ -152,6 +154,13 @@ export const PassportDetails = () => {
         });
       } catch (sbErr) {
         console.warn('Could not update Supabase user metadata:', sbErr);
+      }
+
+      // 4. Mark onboarding as complete in Supabase (new user flow ends here)
+      try {
+        await completeOnboarding();
+      } catch (sbErr) {
+        console.warn('Could not mark onboarding complete:', sbErr);
       }
 
       addToast(

@@ -37,6 +37,7 @@ import { FlightBooking } from './pages/FlightBooking';
 import { MyTrips } from './pages/MyTrips';
 import { SeatSwap } from './pages/SeatSwap';
 import { ResetPassword } from './pages/ResetPassword';
+import { AuthCallback } from './pages/AuthCallback';
 
 // Main App Layout Wrapper that renders Navbar & Sidebar only for interior routes
 const AppLayout = () => {
@@ -48,6 +49,7 @@ const AppLayout = () => {
   const isStandalonePage = 
     location.pathname === '/' || 
     location.pathname === '/auth' || 
+    location.pathname === '/auth/callback' ||
     location.pathname === '/reset-password' ||
     location.pathname === '/language' || 
     location.pathname === '/passport-details';
@@ -58,9 +60,12 @@ const AppLayout = () => {
         <Routes>
           <Route path="/" element={<Splash />} />
           <Route path="/auth" element={<Auth />} />
+          {/* Google OAuth callback — routes based on onboarding_complete */}
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/language" element={<LanguageSelection />} />
-          <Route path="/passport-details" element={<PassportDetails />} />
+          {/* Onboarding pages — accessible only when logged in */}
+          <Route path="/language" element={user ? <LanguageSelection /> : <Navigate to="/auth" replace />} />
+          <Route path="/passport-details" element={user ? <PassportDetails /> : <Navigate to="/auth" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <AIChatbox />

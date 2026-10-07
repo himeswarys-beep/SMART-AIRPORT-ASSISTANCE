@@ -110,13 +110,17 @@ export const Auth = () => {
     
     setIsLoading(true);
     try {
-      const { error } = await login(loginEmail, loginPassword);
+      const { data, error } = await login(loginEmail, loginPassword);
       if (error) {
         console.error('[AEROVA Auth Login Error]:', error);
         setFormError(mapAuthError(error.message));
       } else {
-        addToast('Welcome Back!', `Logged in successfully`, 'success');
-        navigate('/language');
+        // Existing user: check onboarding completion from user_metadata
+        const isOnboarded = data?.user?.user_metadata?.onboarding_complete === true;
+        addToast('Welcome Back!', 'Logged in successfully', 'success');
+        // Existing registered users always go directly to Dashboard
+        // New users who somehow land here (edge case) go through onboarding
+        navigate(isOnboarded ? '/dashboard' : '/language');
       }
     } catch (err) {
       console.error('[AEROVA Auth Login Exception]:', err);
@@ -126,15 +130,17 @@ export const Auth = () => {
     }
   };
 
-  const handleSocialAuth = async (provider) => {
+  // mode: 'signin' = existing user (→ dashboard), 'signup' = new user (→ onboarding)
+  const handleSocialAuth = async (provider, mode) => {
     setFormError('');
     setIsLoading(true);
     try {
-      const { error } = await loginWithProvider(provider);
+      const { error } = await loginWithProvider(provider, mode);
       if (error) {
         console.error('[AEROVA Social Auth Error]:', error);
         setFormError(mapAuthError(error.message));
       }
+      // On success: browser redirects to /auth/callback — no navigate() needed here
     } catch (err) {
       console.error('[AEROVA Social Auth Exception]:', err);
       setFormError(mapAuthError(err.message || 'Network error: Unable to connect to Supabase backend.'));
@@ -171,10 +177,11 @@ export const Auth = () => {
         console.error('[AEROVA Auth Register Error]:', error);
         setFormError(mapAuthError(error.message));
       } else {
-        // Check if email confirmation is required
+        // Check if email already exists (identities array is empty for duplicate)
         if (data?.user?.identities?.length === 0) {
           setFormError('An account with this email already exists. Try logging in instead.');
         } else {
+          // NEW user: must go through onboarding (Language → Passport → Dashboard)
           addToast('Account Created Successfully!', `Welcome to AEROVA, ${regName}. Please verify your email if required.`, 'success');
           navigate('/language');
         }
@@ -329,10 +336,11 @@ export const Auth = () => {
                 )}
               </button>
 
+              {/* Sign In: existing user → dashboard after OAuth */}
               <SocialAuthOptions
                 actionLabel="continue"
-                onGoogle={() => handleSocialAuth('google')}
-                onFacebook={() => handleSocialAuth('facebook')}
+                onGoogle={() => handleSocialAuth('google', 'signin')}
+                onFacebook={() => handleSocialAuth('facebook', 'signin')}
               />
 
               
@@ -448,10 +456,11 @@ export const Auth = () => {
                 )}
               </button>
 
+              {/* Sign Up: new user → onboarding after OAuth */}
               <SocialAuthOptions
                 actionLabel="sign up"
-                onGoogle={() => handleSocialAuth('google')} 
-                onFacebook={() => handleSocialAuth('facebook')}
+                onGoogle={() => handleSocialAuth('google', 'signup')}
+                onFacebook={() => handleSocialAuth('facebook', 'signup')}
               />
             </form>
           )}
